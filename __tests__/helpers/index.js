@@ -1,6 +1,6 @@
 import { createIndexedDBService } from './createIndexedDBService';
-import { setupDomFavoriteAndUnfavoriteResto } from './setupDOMfavoriteAndUnfavoriteResto';
-import { setupMockFavoriteAndUnfavoriteResto } from './setupMockfavoriteAndUnfavoriteResto';
+import { setupDomFavoriteAndUnfavoriteResto } from './setupDomFavoriteAndUnfavoriteResto';
+import { setupMockFavoriteAndUnfavoriteResto } from './setupMockFavoriteAndUnfavoriteResto';
 import { itActsAsFavoriteRestaurantModel } from './testFactories';
 
 export {

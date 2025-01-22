@@ -3,10 +3,12 @@ name: CI/CD Workflow
 on:
   push:
     branches:
-      - [main, master]
+      - main
+      - master
   pull_request:
     branches:
-      - [main, master]
+      - main
+      - master
   schedule:
     - cron: '0 0 * * 1' # Jalankan setiap Senin pukul 00:00 UTC
   workflow_dispatch: # Memungkinkan pemicu manual

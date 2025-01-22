@@ -1,17 +1,14 @@
 // @ts-check
 const { defineConfig, devices } = require('@playwright/test');
-const dotenv = require('dotenv');
 const path = require('path');
-
-dotenv.config({ path: path.resolve(__dirname, '.env') });
-
-const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
+
+const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -75,11 +72,4 @@ module.exports = defineConfig({
       use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
   ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run serve',
-  //   port: 3000,
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });

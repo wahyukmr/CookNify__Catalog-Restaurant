@@ -1,5 +1,9 @@
 // @ts-check
 const { defineConfig, devices } = require('@playwright/test');
+const dotenv = require('dotenv');
+const path = require('path');
+
+dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
@@ -73,9 +77,9 @@ module.exports = defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'npm run serve',
-    port: 3000,
-    reuseExistingServer: !process.env.CI,
-  },
+  // webServer: {
+  //   command: 'npm run serve',
+  //   port: 3000,
+  //   reuseExistingServer: !process.env.CI,
+  // },
 });

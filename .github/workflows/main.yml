@@ -17,6 +17,8 @@ jobs:
   test-and-deploy:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Checkout repository
@@ -72,6 +74,8 @@ jobs:
 
       - name: Update GitHub Secret
         uses: actions/github-script@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
             const response = await github.rest.actions.getRepoPublicKey({

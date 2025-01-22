@@ -1,6 +1,6 @@
 import brandLogo from '../../public/svg/logo-brand-transparent.svg';
 import styles from '../assets/styles/components/brand-logo.styles.scss';
-import { clearContent } from '../utils/clearContent';
+import { clearContent } from '../utils';
 
 class BrandLogo extends HTMLElement {
   constructor() {

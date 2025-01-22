@@ -1,7 +1,6 @@
 import styles from '../assets/styles/components/restaurant-list-page.styles.scss';
-import { clearContent } from '../utils/clearContent';
 import restoList from '../assets/svg/check_list.svg';
-import { lazysizesForShadowDom } from '../utils';
+import { clearContent, lazysizesForShadowDom } from '../utils';
 import domService from '../services/domService';
 
 export default class RestoListPage extends HTMLElement {

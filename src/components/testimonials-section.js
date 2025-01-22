@@ -1,6 +1,5 @@
 import styles from '../assets/styles/components/testimonials-section.styles.scss';
-import { lazysizesForShadowDom } from '../utils';
-import { clearContent } from '../utils/clearContent';
+import { clearContent, lazysizesForShadowDom } from '../utils';
 import jamesBrown from '../assets/images/james-brown.jpg';
 import mariaLopez from '../assets/images/maria-lopez.jpg';
 import lisaChen from '../assets/images/lisa-chen.jpg';

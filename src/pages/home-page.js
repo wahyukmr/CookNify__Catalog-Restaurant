@@ -1,5 +1,5 @@
 import domService from '../services/domService';
-import { clearContent } from '../utils/clearContent';
+import { clearContent } from '../utils';
 
 export default class HomePage extends HTMLElement {
   constructor() {

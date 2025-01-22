@@ -5,8 +5,7 @@ import heroImage200 from '../assets/images/hero-image,w_200.jpg';
 import heroImage555 from '../assets/images/hero-image,w_555.jpg';
 import heroImage815 from '../assets/images/hero-image,w_815.jpg';
 import styles from '../assets/styles/components/hero-section.styles.scss';
-import { lazysizesForShadowDom } from '../utils';
-import { clearContent } from '../utils/clearContent';
+import { clearContent, lazysizesForShadowDom } from '../utils';
 
 class HeroSection extends HTMLElement {
   constructor() {

@@ -10,6 +10,8 @@ const config = {
     '**/__tests__/unit/**/*.test.[jt]s?(x)',
   ],
 
+  maxWorkers: 2,
+
   // The paths to modules that run some code to configure or set up the testing environment before each test
   setupFiles: ['./jest.setup.js'],
 

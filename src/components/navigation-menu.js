@@ -1,5 +1,5 @@
 import styles from '../assets/styles/components/navigation-menu.styles.scss';
-import { clearContent } from '../utils/clearContent';
+import { clearContent } from '../utils';
 
 class NavigationMenu extends HTMLElement {
   constructor() {

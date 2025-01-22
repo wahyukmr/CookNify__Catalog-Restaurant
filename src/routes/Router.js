@@ -1,7 +1,6 @@
 import { ROUTE } from '../config/constants.js';
 import domService from '../services/domService.js';
-import { showErrorNotification } from '../utils/notifications.js';
-import serviceWorkerRegister from '../utils/service-worker-register.js';
+import { serviceWorkerRegister, showErrorNotification } from '../utils';
 
 export default class Router {
   constructor(routeHandlers, mainElement) {

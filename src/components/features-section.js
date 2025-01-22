@@ -1,10 +1,9 @@
 import styles from '../assets/styles/components/features-section.styles.scss';
-import { clearContent } from '../utils/clearContent';
 import favorite from '../assets/svg/favorite-feature.svg';
 import search from '../assets/svg/search-feature.svg';
 import upToDate from '../assets/svg/up_to_date-feature.svg';
 import feedback from '../assets/svg/feedback-feature.svg';
-import { lazysizesForShadowDom } from '../utils';
+import { clearContent, lazysizesForShadowDom } from '../utils';
 
 class FeaturesSection extends HTMLElement {
   constructor() {

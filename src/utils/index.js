@@ -9,11 +9,11 @@ import {
 import serviceWorkerRegister from './service-worker-register';
 
 export {
-  clearContent,
   serviceWorkerRegister,
+  clearContent,
   showWarningNotification,
   showErrorNotification,
   showSuccessNotification,
-  delay,
   lazysizesForShadowDom,
+  delay,
 };

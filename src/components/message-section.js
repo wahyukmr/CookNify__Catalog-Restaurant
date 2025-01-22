@@ -1,5 +1,5 @@
 import styles from '../assets/styles/components/message-section.styles.scss';
-import { clearContent } from '../utils/clearContent';
+import { clearContent } from '../utils';
 
 class MessageSection extends HTMLElement {
   _textMessage = null;

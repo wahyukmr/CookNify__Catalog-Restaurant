@@ -1,5 +1,5 @@
 import styles from '../assets/styles/components/favorite-page.styles.scss';
-import { clearContent } from '../utils/clearContent';
+import { clearContent } from '../utils';
 
 export default class FavoritePage extends HTMLElement {
   constructor() {

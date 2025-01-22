@@ -1,5 +1,5 @@
 import styles from '../assets/styles/components/list-restaurant-container.styles.scss';
-import { clearContent } from '../utils/clearContent';
+import { clearContent } from '../utils';
 
 class ListRestaurantContainer extends HTMLElement {
   constructor() {

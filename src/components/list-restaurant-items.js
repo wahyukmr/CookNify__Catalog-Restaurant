@@ -1,7 +1,6 @@
 import styles from '../assets/styles/components/list-restaurant-items.styles.scss';
 import { RESTO_IMG_LARGE, RESTO_IMG_MEDIUM, RESTO_IMG_SMALL } from '../config/constants';
-import { lazysizesForShadowDom } from '../utils';
-import { clearContent } from '../utils/clearContent';
+import { clearContent, lazysizesForShadowDom } from '../utils';
 
 class ListRestaurantItems extends HTMLElement {
   _dataRestaurant = {};

@@ -1,5 +1,5 @@
 import styles from '../assets/styles/components/restaurant-detail-page.styles.scss';
-import { clearContent } from '../utils/clearContent';
+import { clearContent } from '../utils';
 
 export default class RestoDetailPage extends HTMLElement {
   constructor() {

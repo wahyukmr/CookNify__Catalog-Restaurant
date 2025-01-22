@@ -1,5 +1,5 @@
 import styles from '../assets/styles/components/loader-section.styles.scss';
-import { clearContent } from '../utils/clearContent';
+import { clearContent } from '../utils';
 
 class LoaderSection extends HTMLElement {
   constructor() {

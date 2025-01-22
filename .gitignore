@@ -1,0 +1,14 @@
+# For IDE
+.vscode
+.idea
+.env
+
+# For web application
+dist
+node_modules
+
+.package-lock.json
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

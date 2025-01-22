@@ -1,0 +1,10 @@
+import './brand-logo.js';
+import './hero-section.js';
+import './loader-section.js';
+import './message-section.js';
+import './navigation-menu.js';
+import './list-restaurant-items.js';
+import './testimonials-section.js';
+import './features-section.js';
+import './list-restaurant-container.js';
+import './list-restaurant-item-detail.js';

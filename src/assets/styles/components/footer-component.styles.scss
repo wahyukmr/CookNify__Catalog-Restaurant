@@ -1,0 +1,92 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+@include m.focus-style;
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  row-gap: v.$spacing-32;
+  align-items: center;
+  padding-inline: v.$spacing-24;
+  padding-top: v.$spacing-48;
+  padding-bottom: v.$spacing-32;
+  background: rgb(95, 20, 21);
+  background: -moz-linear-gradient(
+    180deg,
+    rgba(95, 20, 21, 1) 20%,
+    rgba(76, 0, 0, 0.7261029411764706) 100%
+  );
+  background: -webkit-linear-gradient(
+    180deg,
+    rgba(95, 20, 21, 1) 20%,
+    rgba(76, 0, 0, 0.7261029411764706) 100%
+  );
+  background: linear-gradient(
+    180deg,
+    rgba(95, 20, 21, 1) 20%,
+    rgba(76, 0, 0, 0.7261029411764706) 100%
+  );
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#5f1415",endColorstr="#4c0000",GradientType=1);
+
+  @include m.breakpoint(small, min-width) {
+    padding-inline: calc(4vw + v.$spacing-24);
+  }
+
+  @include m.breakpoint(large, min-width) {
+    padding-top: v.$spacing-64;
+  }
+
+  &__brand {
+    display: flex;
+    justify-content: space-between;
+    column-gap: v.$spacing-16;
+    flex-wrap: wrap;
+
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      max-width: f.rem(800);
+      height: 1px;
+      background-color: v.$bg-300;
+      margin: v.$spacing-80 auto 0;
+      border-radius: 2px;
+
+      @include m.breakpoint(large, min-width) {
+        margin: v.$spacing-96 auto 0;
+      }
+    }
+
+    &--description {
+      flex: 0 1 80%;
+      color: v.$text-100;
+      opacity: 0.9;
+
+      @include m.breakpoint(small, min-width) {
+        flex: 0 1 60%;
+      }
+
+      @include m.breakpoint(large, min-width) {
+        flex: 0 1 50%;
+      }
+    }
+  }
+
+  &__copyright {
+    color: v.$text-200;
+    width: f.rem(290);
+    text-align: center;
+
+    @include m.breakpoint(small, min-width) {
+      width: f.rem(310);
+    }
+
+    & strong {
+      color: v.$text-100;
+    }
+  }
+}

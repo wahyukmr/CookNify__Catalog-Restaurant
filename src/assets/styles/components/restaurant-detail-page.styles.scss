@@ -1,0 +1,41 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+
+.detail-page {
+  padding-top: v.$spacing-64;
+  padding-bottom: v.$spacing-80;
+
+  @include m.breakpoint(small, min-width) {
+    padding-top: v.$spacing-80;
+    padding-bottom: v.$spacing-96;
+  }
+
+  &__container {
+    text-align: center;
+
+    @include m.container-style(v.$spacing-16, f.rem(1200));
+
+    @include m.breakpoint(small, min-width) {
+      @include m.container-style(v.$spacing-24, f.rem(1200));
+    }
+
+    @include m.breakpoint(medium, min-width) {
+      @include m.container-style(v.$spacing-32, f.rem(1200));
+    }
+  }
+  &__heading {
+    color: v.$primary-100;
+    margin-bottom: v.$spacing-48;
+    @include m.heading-style(h1);
+    @include m.breakpoint(small, min-width) {
+      margin-bottom: v.$spacing-64;
+    }
+  }
+
+  &__restaurant {
+    min-height: f.rem(400);
+  }
+}

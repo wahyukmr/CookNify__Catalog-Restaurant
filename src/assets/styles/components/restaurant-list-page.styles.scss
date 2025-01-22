@@ -1,0 +1,313 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+@include m.focus-style;
+@include m.skeleton;
+@include m.screen-reader-only;
+
+@keyframes skeleton-loading {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.restaurant-list {
+  padding-top: v.$spacing-64;
+  padding-bottom: v.$spacing-80;
+
+  @include m.breakpoint(small, min-width) {
+    padding-top: v.$spacing-80;
+    padding-bottom: v.$spacing-96;
+  }
+
+  &__container {
+    @include m.container-style(v.$spacing-16, f.rem(910));
+
+    @include m.breakpoint(small, min-width) {
+      @include m.container-style(v.$spacing-24, f.rem(910));
+    }
+
+    @include m.breakpoint(medium, min-width) {
+      @include m.container-style(v.$spacing-32, f.rem(955));
+    }
+  }
+
+  &__header {
+    text-align: center;
+    color: v.$primary-100;
+    margin-bottom: 0.6rem;
+    animation-delay: 0.2s;
+    @include m.heading-style(h1);
+  }
+
+  &__wrapper-img {
+    position: relative;
+    width: 80%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    margin-inline: auto;
+    margin-bottom: 0.6rem;
+    animation-delay: 0.4s;
+    @include m.breakpoint(small, min-width) {
+      width: 60%;
+    }
+
+    & .skeleton {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    & .image {
+      @include m.image-style(100%, auto);
+    }
+  }
+
+  &__header,
+  &__wrapper-img {
+    @include m.fadeInUp-animation;
+  }
+
+  &__search-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background-color: v.$bg-300;
+    border-radius: 2rem;
+    padding: 0.2rem;
+    margin-inline: auto;
+    margin-bottom: calc(v.$spacing-8 + (1rem + f.rem(50)));
+    width: 100%;
+    max-width: f.rem(600);
+    height: f.rem(50);
+    transition: all 0.3s;
+
+    @include m.breakpoint(small, min-width) {
+      height: f.rem(55);
+      flex-wrap: nowrap;
+    }
+
+    &:focus-within {
+      box-shadow: 0 0.7rem 3rem v.$bg-200;
+    }
+  }
+}
+
+.search-bar {
+  &__wrapper {
+    flex: 1 1 100%;
+    position: relative;
+    height: 100%;
+
+    @include m.breakpoint(small, min-width) {
+      flex: 1;
+    }
+  }
+
+  &__input {
+    width: 100%;
+    height: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border: 2px solid v.$accent-200;
+    border-radius: 2rem;
+    color: v.$text-100;
+    background-color: v.$bg-200;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+
+    @include m.input-style;
+    @include m.breakpoint(small, min-width) {
+      padding-right: 2.8rem;
+      font: inherit;
+    }
+
+    &:hover {
+      border-color: v.$primary-100;
+    }
+
+    &:focus {
+      border-color: v.$primary-200;
+    }
+  }
+
+  &__button {
+    @include m.button-style;
+
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    column-gap: 0.4rem;
+    color: v.$text-100;
+    background-image: linear-gradient(135deg, v.$primary-100, v.$primary-200);
+    border: none;
+    outline: none;
+    border-radius: 2rem;
+    padding-inline: 1rem;
+    transition: background-image 0.3s ease-in-out;
+
+    &:hover {
+      background-image: linear-gradient(135deg, v.$primary-200, v.$primary-100);
+    }
+
+    & svg {
+      width: f.rem(18);
+      height: f.rem(18);
+    }
+
+    & span {
+      display: block;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+  }
+}
+
+.filter {
+  &__wrapper {
+    flex: 1 1 100%;
+    height: 100%;
+    position: relative;
+    z-index: v.$z-index-absolute-element;
+
+    @include m.breakpoint(small, min-width) {
+      flex: 0 0 auto;
+    }
+
+    &.active {
+      & button .filter__button-arrow {
+        transform: rotate(180deg);
+      }
+      & .filter__dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: scaleY(1);
+      }
+    }
+  }
+
+  &__button {
+    @include m.button-style;
+
+    & {
+      width: f.rem(130);
+      height: 100%;
+      color: v.$text-100;
+      background-color: v.$bg-200;
+      padding: 0.4rem 1em;
+      border: 2px solid v.$bg-300;
+      border-radius: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      column-gap: v.$spacing-8;
+      transition: all 0.3s ease-in-out;
+
+      @include m.breakpoint(small, min-width) {
+        border: 2px solid transparent;
+      }
+    }
+
+    &:hover,
+    &:active {
+      border-color: v.$accent-200;
+    }
+
+    &:focus-visible {
+      outline: none;
+      border-color: v.$primary-200;
+    }
+
+    &-value {
+      font-size: f.rem(12);
+    }
+
+    &-arrow {
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid v.$text-200;
+      transition: transform 0.3s ease-in-out;
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: 100%;
+    right: auto;
+    left: 0;
+    width: 12rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    background-color: v.$bg-200;
+    border: 1px solid v.$accent-200;
+    border-radius: 1rem;
+    margin-top: f.rem(10);
+    transition: 0.3s ease-in-out;
+    transform: scaleY(0);
+    opacity: 0;
+    visibility: hidden;
+    will-change: transform, opacity, visibility;
+
+    @include m.no-list-style;
+    @include m.breakpoint(small, min-width) {
+      right: 0;
+      left: auto;
+    }
+
+    & li {
+      min-height: f.rem(44);
+      cursor: pointer;
+    }
+
+    & li:first-child {
+      padding: 1.2em 1em 0.6em;
+      border-top-left-radius: 1rem;
+      border-top-right-radius: 1rem;
+    }
+
+    & li:last-child {
+      padding: 0.6em 1em 1.2em;
+      border-bottom-left-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+    }
+
+    & li:not(:first-child):not(:last-child) {
+      padding: 0.6em 1em;
+    }
+
+    & li:hover {
+      background-color: v.$bg-300;
+    }
+
+    & li:active {
+      background-color: v.$bg-100;
+    }
+
+    & li:focus-visible {
+      background-color: v.$bg-100;
+      outline: none;
+      border: 2px solid v.$primary-100;
+    }
+  }
+}

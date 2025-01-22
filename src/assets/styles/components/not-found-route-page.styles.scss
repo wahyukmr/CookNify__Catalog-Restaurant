@@ -1,0 +1,19 @@
+@use "../utils/variables" as v;
+@use "../utils/mixins" as m;
+@use "../utils/functions" as f;
+
+@include m.box-sizing-inherit;
+
+.not-found {
+  @include m.container-style(v.$spacing-24, f.rem(450));
+
+  &__img {
+    margin-top: v.$spacing-64;
+    @include m.image-style(100%, auto);
+  }
+
+  &__text {
+    text-align: center;
+    margin-bottom: v.$spacing-48;
+  }
+}

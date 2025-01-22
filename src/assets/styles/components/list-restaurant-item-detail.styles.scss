@@ -1,0 +1,387 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+@include m.focus-style;
+@include m.skeleton;
+
+@keyframes skeleton-loading {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.restaurant {
+  &__container {
+    display: grid;
+    grid-template-columns: 1fr;
+    max-width: f.rem(600);
+    margin-inline: auto;
+    gap: v.$spacing-32;
+
+    @include m.breakpoint(medium, min-width) {
+      grid-template-columns: repeat(2, 1fr);
+      max-width: 100%;
+    }
+  }
+  &__picture {
+    display: block;
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: f.rem(300);
+    border-radius: 1rem;
+    overflow: hidden;
+
+    @include m.breakpoint(xsmall, min-width) {
+      height: f.rem(400);
+    }
+    @include m.breakpoint(small, min-width) {
+      height: f.rem(450);
+    }
+    @include m.breakpoint(medium, min-width) {
+      height: f.rem(500);
+    }
+    @include m.breakpoint(large, min-width) {
+      height: f.rem(600);
+    }
+  }
+  &__image {
+    object-fit: cover;
+    @include m.image-style(100%, 100%);
+  }
+
+  &__info {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+    @include m.breakpoint(medium, min-width) {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    &-name {
+      @include m.heading-style(h2);
+    }
+    &-location {
+      color: v.$text-200;
+    }
+    &-detail {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+      column-gap: v.$spacing-24;
+      margin-top: v.$spacing-24;
+      margin-bottom: v.$spacing-24;
+
+      @include m.breakpoint(small, min-width) {
+        margin-top: v.$spacing-48;
+        margin-bottom: v.$spacing-32;
+      }
+
+      & .favorite-btn {
+        @include m.button-style;
+
+        display: flex;
+        align-items: center;
+        column-gap: v.$spacing-8;
+        font-weight: 600;
+        height: f.rem(44);
+        padding-inline: v.$spacing-16;
+        background: linear-gradient(135deg, v.$primary-200, v.$primary-100);
+        border: none;
+        border-radius: 2rem;
+        transition: opacity 0.2s ease;
+        box-shadow: 0 4px 12px rgba(95, 20, 21, 0.15);
+        user-select: none;
+        -webkit-user-select: none;
+
+        &:hover {
+          opacity: 0.8;
+        }
+
+        &:disabled {
+          background: v.$text-200;
+          opacity: 1;
+          cursor: not-allowed;
+        }
+
+        & svg {
+          fill: v.$primary-300;
+          width: 1.1rem;
+          height: 1.1rem;
+        }
+
+        & span {
+          display: block;
+          color: v.$primary-300;
+        }
+      }
+
+      & .rating {
+        align-content: center;
+        display: block;
+        height: f.rem(44);
+        padding-inline: v.$spacing-16;
+        border-radius: 2rem;
+        border: 2px solid v.$accent-100;
+      }
+    }
+
+    &-categories {
+      margin-bottom: v.$spacing-24;
+
+      @include m.breakpoint(small, min-width) {
+        margin-bottom: v.$spacing-32;
+      }
+
+      & .categories__items {
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        column-gap: v.$spacing-24;
+        @include m.no-list-style;
+
+        & li {
+          padding-block: v.$spacing-8;
+          padding-inline: v.$spacing-24;
+          border-radius: 2rem;
+          color: v.$text-200;
+          background: v.$bg-300;
+        }
+      }
+    }
+    &-menus {
+      display: flex;
+      flex-direction: column;
+      row-gap: v.$spacing-24;
+      align-items: start;
+
+      @include m.breakpoint(xsmall, min-width) {
+        flex-direction: row;
+        column-gap: v.$spacing-24;
+      }
+
+      & .menu {
+        flex: 1;
+        width: 100%;
+        @include m.breakpoint(xsmall, min-width) {
+          flex: 1 1 50%;
+        }
+
+        &__items {
+          width: 100%;
+          background: v.$bg-300;
+          padding: v.$spacing-8;
+          border-radius: 10px;
+          @include m.no-list-style;
+        }
+      }
+    }
+  }
+
+  &__reviews {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: v.$spacing-32;
+
+    @include m.breakpoint(medium, min-width) {
+      grid-column: 1 / 3;
+      grid-row: 2;
+    }
+
+    & .review__item-empty {
+      text-align: center;
+      font-style: italic;
+    }
+
+    & .review__table {
+      width: 100%;
+      border-collapse: collapse;
+
+      &-container {
+        width: 100%;
+        max-height: f.rem(400);
+        overflow-y: auto;
+        margin-top: 20px;
+        border-radius: 10px;
+        outline: 1.5px solid v.$bg-300;
+      }
+
+      & th {
+        background-color: v.$bg-300;
+        padding: 8px;
+        text-align: center;
+        position: sticky;
+        top: 0;
+        z-index: v.$z-index-base;
+        white-space: nowrap;
+      }
+
+      & td {
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+
+        &:nth-child(2) {
+          border-inline-width: 1.5px;
+          border-inline-style: solid;
+          border-inline-color: v.$bg-300;
+        }
+
+        &:not(:nth-child(2)) {
+          max-width: 100px;
+        }
+      }
+    }
+
+    & .review__row {
+      &:nth-child(even) {
+        background-color: v.$bg-200;
+      }
+      &-odd {
+        background-color: v.$bg-100;
+      }
+    }
+  }
+
+  &__descriptions {
+    grid-column: 1;
+    grid-row: 4;
+    margin-top: v.$spacing-32;
+    margin-inline: auto;
+    max-width: f.rem(800);
+    @include m.breakpoint(medium, min-width) {
+      grid-column: 1 / 3;
+      grid-row: 3;
+    }
+
+    & .description {
+      @include m.breakpoint(medium, min-width) {
+        font-size: inherit;
+      }
+    }
+  }
+
+  &__review {
+    grid-column: 1;
+    grid-row: 5;
+    margin-top: v.$spacing-32;
+    margin-inline: auto;
+    width: 100%;
+    max-width: 23rem;
+    @include m.breakpoint(medium, min-width) {
+      grid-column: 1 / 3;
+      grid-row: 4;
+    }
+
+    &-form {
+      & .fild {
+        &__wrapper {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          margin-bottom: v.$spacing-24;
+        }
+        &__label {
+          text-align: left;
+          font-weight: 500;
+          letter-spacing: 1px;
+          margin-bottom: v.$spacing-4;
+        }
+        &__input,
+        &__body {
+          padding-inline: 10px;
+          margin-block-end: v.$spacing-4;
+          margin-block-start: v.$spacing-2;
+          border-radius: 8px;
+          color: v.$text-100;
+          background-color: v.$bg-200;
+          border: none;
+          outline: 2px solid v.$accent-200;
+
+          @include m.input-style;
+          @include m.breakpoint(small, min-width) {
+            font: inherit;
+          }
+        }
+
+        &__input:not(:placeholder-shown):valid,
+        &__body:not(:placeholder-shown):valid {
+          outline-color: v.$accent-100;
+        }
+
+        &__input:focus:invalid,
+        &__body:focus:invalid {
+          outline-color: v.$primary-200;
+        }
+
+        &__input {
+          height: f.rem(44);
+        }
+
+        &__body {
+          min-height: f.rem(44);
+          padding-block: 8px;
+          resize: vertical;
+        }
+      }
+
+      & .form-btn {
+        font-size: v.$subHeading-font-size;
+        font-weight: 600;
+        height: f.rem(50);
+        margin-top: v.$spacing-32;
+        padding-inline: v.$spacing-32;
+        color: v.$primary-300;
+        background: linear-gradient(135deg, v.$primary-100, v.$primary-200);
+        border: none;
+        border-radius: 2rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(95, 20, 21, 0.15);
+        user-select: none;
+        -webkit-user-select: none;
+        @include m.button-style;
+
+        &:hover {
+          background: linear-gradient(135deg, v.$primary-200, v.$primary-100);
+        }
+
+        &:disabled {
+          background-image: v.$text-200;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+.header {
+  font-weight: 400;
+  margin-bottom: v.$spacing-16;
+  @include m.heading-style(h3);
+}
+
+.validation-message {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  visibility: hidden;
+  opacity: 0;
+  font-size: f.rem(14);
+  color: #ff6b6b;
+  letter-spacing: 0.6px;
+  transition: all 0.3s ease-in-out;
+
+  &.visible {
+    visibility: visible;
+    opacity: 1;
+  }
+}

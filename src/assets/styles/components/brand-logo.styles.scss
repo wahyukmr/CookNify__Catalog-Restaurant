@@ -1,0 +1,26 @@
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+@use '../utils/variables' as v;
+
+@include m.box-sizing-inherit;
+@include m.focus-style;
+
+.brand-logo {
+  @include m.link-reset-style;
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &__img {
+    @include m.image-style(f.rem(80), auto);
+    vertical-align: middle;
+    min-height: f.rem(44);
+    display: inline-block;
+
+    @include m.breakpoint(small, min-width) {
+      @include m.image-style(f.rem(100), auto);
+      display: inline-block;
+    }
+  }
+}

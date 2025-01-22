@@ -1,0 +1,7 @@
+# Abaikan file yang tidak ingin diformat oleh Prettier
+node_modules/
+build/
+dist/
+coverage
+*.min.js
+*.bundle.js

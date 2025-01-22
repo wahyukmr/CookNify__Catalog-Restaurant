@@ -1,0 +1,59 @@
+@use 'functions' as f;
+
+$default-font-size: clamp(f.rem(13), f.rem(10) + 0.8vw, f.rem(16));
+$subHeading-font-size: clamp(f.rem(14), f.rem(12) + 1vw, f.rem(18));
+
+// LINE_HEIGHT
+$default-line-height: 1.6;
+$heading-line-height: 1.2;
+
+// SPACING
+$spacing-2: f.rem(2);
+$spacing-4: f.rem(4);
+$spacing-6: f.rem(6);
+$spacing-8: f.rem(8);
+$spacing-12: f.rem(12);
+$spacing-16: f.rem(16);
+$spacing-24: f.rem(24);
+$spacing-32: f.rem(32);
+$spacing-48: f.rem(48);
+$spacing-64: f.rem(64);
+$spacing-80: f.rem(80);
+$spacing-96: f.rem(96);
+
+$container-default-max-width: f.rem(1200);
+
+$grid-columns: 12;
+
+// RESPONSIVE
+$breakpoints: (
+  xsmall: f.em(500),
+  small: f.em(600),
+  medium: f.em(900),
+  large: f.em(1200),
+);
+$breakpoints-down: (
+  xsmall: f.em(499.98),
+  small: f.em(599.98),
+  medium: f.em(899.98),
+  large: f.em(1199.98),
+);
+
+// COLORS
+$primary-100: rgb(255, 87, 51);
+$primary-200: rgb(255, 138, 95);
+$primary-300: rgb(255, 243, 191);
+$accent-100: rgb(255, 195, 0);
+$accent-200: rgb(145, 102, 0);
+$text-100: rgb(255, 255, 255);
+$text-200: rgb(164, 164, 164);
+$bg-100: rgb(76, 0, 0);
+$bg-200: rgb(95, 20, 21);
+$bg-300: rgb(125, 47, 43);
+
+//Z-INDEXS
+$z-index-overlay: -1;
+$z-index-base: 1;
+$z-index-absolute-element: 10;
+$z-index-header: 50;
+$z-index-skip-to-content: 100;

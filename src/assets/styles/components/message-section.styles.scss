@@ -1,0 +1,12 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+
+.message {
+  &__content {
+    color: v.$text-100;
+    text-align: center;
+  }
+}

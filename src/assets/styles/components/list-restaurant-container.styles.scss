@@ -1,0 +1,81 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+@include m.focus-style;
+
+.card {
+  &__container-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  &__list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 300px;
+    gap: v.$spacing-16;
+    height: f.rem(400);
+    margin-inline: auto;
+    margin-top: v.$spacing-32;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+
+    @include m.breakpoint(small, min-width) {
+      margin-top: v.$spacing-24;
+    }
+
+    @include m.breakpoint(medium, min-width) {
+      margin-top: v.$spacing-32;
+    }
+
+    & > * {
+      scroll-snap-align: start;
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: v.$accent-200;
+    border: 2px solid transparent;
+    color: v.$primary-300;
+    border-radius: 50%;
+    width: f.rem(44);
+    height: f.rem(44);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: v.$z-index-absolute-element;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &:hover {
+      border: 2px solid v.$primary-300;
+    }
+
+    &.left {
+      display: none;
+      left: 8px;
+    }
+    &.right {
+      display: none;
+      right: 8px;
+    }
+  }
+}

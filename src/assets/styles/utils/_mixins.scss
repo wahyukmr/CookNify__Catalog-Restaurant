@@ -1,0 +1,169 @@
+@use 'variables' as v;
+@use 'functions' as f;
+@use 'sass:map';
+
+@mixin box-sizing-inherit {
+  :host *,
+  :host *::before,
+  :host *::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+@mixin container-style($padding, $max-width) {
+  max-width: $max-width;
+  padding-inline: $padding;
+  margin-inline: auto;
+}
+
+@mixin breakpoint($size, $property, $direction: up) {
+  @if $direction == up {
+    @media ($property: map.get(v.$breakpoints, $size)) {
+      @content;
+    }
+  } @else if $direction == down {
+    @media ($property: map.get(v.$breakpoints-down, $size)) {
+      @content;
+    }
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion) {
+    @content;
+  }
+}
+
+@mixin center-element {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin focus-style {
+  button:focus-visible,
+  a:focus-visible,
+  [role='button']:focus-visible,
+  [role='link']:focus-visible,
+  textarea:focus-visible {
+    outline: f.rem(2) solid v.$primary-100;
+    outline-offset: f.rem(4);
+  }
+}
+
+@mixin image-style($width, $height) {
+  display: block;
+  width: $width;
+  height: $height;
+}
+
+@mixin button-style() {
+  display: inline-block;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+@mixin menu-icon-style($background) {
+  display: block;
+  width: f.rem(44);
+  height: f.rem(44);
+  border-radius: 50%;
+  background: $background;
+  border: none;
+  cursor: pointer;
+}
+
+@mixin no-list-style {
+  list-style: none;
+}
+
+@mixin link-reset-style {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+}
+
+@mixin input-style {
+  display: block;
+  font-family: inherit;
+
+  &:focus {
+    caret-color: v.$text-100;
+  }
+
+  &::placeholder {
+    font-family: inherit;
+    color: v.$text-200;
+    letter-spacing: 0;
+  }
+
+  &::-webkit-input-placeholder {
+    color: v.$text-200;
+  }
+
+  &::-moz-placeholder {
+    color: v.$text-200;
+  }
+}
+
+@mixin heading-style($type) {
+  line-height: v.$heading-line-height;
+
+  @if $type == h1 {
+    font-family: 'Namdhinggo-Bold', serif;
+    font-size: clamp(f.rem(28), f.rem(20) + 3vw, f.rem(56));
+    letter-spacing: 1.2px;
+  }
+  @if $type == h2 {
+    font-family: 'Namdhinggo-SemiBold', serif;
+    font-size: clamp(f.rem(24), f.rem(16) + 2.5vw, f.rem(44));
+  }
+  @if $type == h3 {
+    font-family: 'Namdhinggo-SemiBold', serif;
+    font-size: clamp(f.rem(20), f.rem(14) + 2vw, f.rem(32));
+  }
+}
+
+@mixin flex-item($columns, $grid-gap) {
+  flex: 0 0 100%;
+
+  @include breakpoint(small) {
+    flex: 0 0 calc(100% / $grid-columns * $columns - #{$grid-gap});
+  }
+}
+
+@mixin fadeInUp-animation {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+@mixin skeleton {
+  .skeleton {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, v.$bg-200 20%, v.$bg-300 50%, v.$bg-200 80%);
+    background-size: 200% 100%;
+    border-radius: 10px;
+    animation: skeleton-loading 1.5s infinite;
+
+    &.hidden {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  }
+}
+
+@mixin screen-reader-only {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}

@@ -1,0 +1,113 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+@include m.skeleton;
+
+@keyframes skeleton-loading {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.testimonials {
+  background-color: transparent;
+  text-align: center;
+  margin: v.$spacing-96 auto v.$spacing-96;
+
+  &__container {
+    @include m.container-style(v.$spacing-24, f.rem(1000));
+
+    @include m.breakpoint(small, min-width) {
+      @include m.container-style(v.$spacing-32, f.rem(1000));
+    }
+  }
+
+  &__header {
+    color: v.$primary-200;
+    margin-bottom: v.$spacing-8;
+    @include m.heading-style(h2);
+  }
+
+  &__description {
+    font-size: v.$subHeading-font-size;
+    margin-bottom: v.$spacing-48;
+  }
+}
+
+.testimonial {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(f.rem(260), 1fr));
+  gap: v.$spacing-32;
+
+  @include m.breakpoint(small, min-width) {
+    grid-template-columns: repeat(auto-fit, minmax(f.rem(300), 1fr));
+  }
+
+  @include m.breakpoint(large, min-width) {
+    grid-template-columns: repeat(auto-fit, minmax(f.rem(360), 1fr));
+  }
+
+  &__card {
+    position: relative;
+    width: 100%;
+    padding: v.$spacing-32;
+    margin-top: f.rem(60);
+    border: 4px solid v.$bg-300;
+    border-radius: 45px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include m.breakpoint(large, min-width) {
+      padding: v.$spacing-48;
+    }
+
+    & .wrapper {
+      @include m.center-element;
+      top: 0;
+    }
+  }
+  &__profile {
+    margin-top: v.$spacing-32;
+  }
+  &__picture {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: f.rem(120);
+    height: f.rem(120);
+    border-radius: 50%;
+    border: 4px solid v.$bg-300;
+    overflow: hidden;
+
+    & .skeleton {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &-avatar {
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+
+      @include m.image-style(f.rem(120), f.rem(120));
+    }
+  }
+  &__name {
+    font-size: v.$subHeading-font-size;
+    font-weight: 600;
+  }
+  &__role {
+    color: v.$text-200;
+  }
+  &__text {
+    margin-top: v.$spacing-24;
+  }
+}

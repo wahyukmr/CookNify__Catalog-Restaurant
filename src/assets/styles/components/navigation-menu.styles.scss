@@ -1,0 +1,97 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+@include m.focus-style;
+@include m.screen-reader-only;
+
+.topnav {
+  button {
+    @include m.menu-icon-style(none);
+
+    @include m.breakpoint(small, min-width) {
+      display: none;
+    }
+
+    &:hover {
+      background: v.$bg-200;
+    }
+  }
+
+  svg {
+    fill: v.$text-100;
+    vertical-align: middle;
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  &__btnOpen[aria-expanded='true'] {
+    + .topnav__menu {
+      translate: 0;
+
+      // memeriksa preferensi user untuk mengurangi animasi atau gerakan
+      @media (prefers-reduced-motion) {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__menu {
+    @include m.breakpoint(small, max-width, down) {
+      position: fixed;
+      inset: 0;
+      padding: 1.5rem;
+      background: v.$bg-100;
+      translate: 100vw 0;
+      transition: translate 0.5s ease-in-out;
+    }
+
+    @include m.breakpoint(small, max-width, down) {
+      @include m.reduced-motion {
+        translate: 0;
+        opacity: 0;
+        transition: opacity 500ms ease-in-out;
+      }
+    }
+  }
+
+  &__btnClose {
+    margin-inline-start: auto;
+    margin-block-end: 8rem;
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+
+    @include m.breakpoint(small, min-width) {
+      flex-direction: row;
+    }
+  }
+
+  &__item {
+    @include m.no-list-style;
+  }
+
+  &__link {
+    @include m.link-reset-style;
+    display: flex;
+    align-items: center;
+    min-height: f.rem(44);
+    min-width: f.rem(44);
+    padding-inline: v.$spacing-16;
+    font-weight: 600;
+    transition: text-decoration 0.3s ease-in-out;
+
+    &:hover {
+      color: v.$primary-300;
+      text-decoration: underline v.$accent-100 1px;
+      text-underline-offset: v.$spacing-4;
+    }
+  }
+}

@@ -1,0 +1,47 @@
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
+
+@include m.box-sizing-inherit;
+
+.favorite-section {
+  padding-top: v.$spacing-64;
+  padding-bottom: v.$spacing-80;
+
+  @include m.breakpoint(small, min-width) {
+    padding-top: v.$spacing-80;
+    padding-bottom: v.$spacing-96;
+  }
+
+  &__container {
+    text-align: center;
+
+    @include m.container-style(v.$spacing-16, f.rem(1000));
+
+    @include m.breakpoint(small, min-width) {
+      @include m.container-style(v.$spacing-24, f.rem(1000));
+    }
+
+    @include m.breakpoint(medium, min-width) {
+      @include m.container-style(v.$spacing-32, f.rem(1000));
+    }
+  }
+  &__heading {
+    color: v.$primary-100;
+    animation-delay: 0.2s;
+
+    @include m.heading-style(h1);
+    @include m.fadeInUp-animation;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

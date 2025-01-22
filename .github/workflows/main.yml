@@ -17,6 +17,9 @@ jobs:
   test-and-deploy:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

@@ -85,7 +85,7 @@ describe('should display a list of favorite restaurants', () => {
     expect(mockRenderer.clearContainer).toHaveBeenCalled();
     expect(mockRenderer.createLoaderElement).toHaveBeenCalled();
 
-    expect(view.renderFallback).toHaveBeenCalledWith('No saved list of favorite restaurants.');
+    expect(view.renderFallback).toHaveBeenCalledWith('No saved list of favorite restaurants');
     expect(mockRenderer.clearContainer).toHaveBeenCalled();
     expect(mockBatchLoader.setRestaurants).toHaveBeenCalledWith([]);
     expect(mockRenderer.createFallbackElement).toHaveBeenCalled();

@@ -1,0 +1,103 @@
+name: CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - [main, master]
+  pull_request:
+    branches:
+      - [main, master]
+  schedule:
+    - cron: '0 0 * * 1' # Jalankan setiap Senin pukul 00:00 UTC
+  workflow_dispatch: # Memungkinkan pemicu manual
+
+jobs:
+  test-and-deploy:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo BASE_API_URL=${{ secrets.BASE_API_URL }} >> .env
+          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
+          echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
+          echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
+
+      - name: Run Jest tests
+        run: npm test
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Install Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: Authenticate Netlify CLI
+        run: netlify login --auth $NETLIFY_AUTH_TOKEN
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+
+      - name: Generate new Netlify token
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          new_token=$(netlify api access_tokens:create --data '{ "name": "GitHub CI/CD Integration - CookNify" }' --auth $NETLIFY_AUTH_TOKEN | jq -r '.access_token')
+          echo "NEW_NETLIFY_AUTH_TOKEN=$new_token" >> $GITHUB_ENV
+
+      - name: Update GitHub Secret
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const response = await github.rest.actions.getRepoPublicKey({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const encryptedValue = require('crypto')
+              .publicEncrypt(response.data.key, Buffer.from(process.env.NEW_NETLIFY_AUTH_TOKEN))
+              .toString('base64');
+            await github.rest.actions.createOrUpdateRepoSecret({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              secret_name: 'NETLIFY_AUTH_TOKEN',
+              encrypted_value: encryptedValue,
+              key_id: response.data.key_id,
+            });
+
+      - name: Revoke old Netlify tokens for this project
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        run: |
+          netlify api access_tokens:list --auth $NETLIFY_AUTH_TOKEN | jq -r '.[] | select(.name | contains("GitHub CI/CD Integration - CookNify")) | .id' | while read token_id; do
+            netlify api access_tokens:revoke --data "{ \"id\": \"$token_id\" }" --auth $NETLIFY_AUTH_TOKEN
+          done
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NEW_NETLIFY_AUTH_TOKEN }}
+        run: netlify deploy --prod --dir=dist --site=$NETLIFY_SITE_ID

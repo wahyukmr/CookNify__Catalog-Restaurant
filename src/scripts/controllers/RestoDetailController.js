@@ -70,7 +70,6 @@ export default class RestoDetailController {
       showErrorNotification(
         error.message || 'An error occurred while handling the favorite button',
       );
-      await delay(3000);
     } finally {
       favoriteBtn.disabled = false;
     }

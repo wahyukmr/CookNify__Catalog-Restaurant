@@ -74,7 +74,7 @@ const config = defineConfig({
   ],
 });
 
-if (process.env.BASE_URL) {
+if (!process.env.BASE_URL) {
   config.webServer = {
     command: 'npm run serve',
     url: 'http://localhost:3000',

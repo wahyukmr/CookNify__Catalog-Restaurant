@@ -23,13 +23,22 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Set BASE_URL for development
-        if: github.head_ref == 'dev'
-        run: echo "BASE_URL=https://dev-cooknify.netlify.app" >> $GITHUB_ENV
+      - name: Debug GitHub Context
+        run: |
+          echo "Branch ref: ${{ github.ref }}"
+          echo "Head ref: ${{ github.head_ref }}"
+          echo "Base ref: ${{ github.base_ref }}"
 
-      - name: Set BASE_URL for production
-        if: github.head_ref == 'main'
-        run: echo "BASE_URL=https://cooknify.netlify.app" >> $GITHUB_ENV
+      - name: Set BASE_URL dynamically
+        run: |
+          if [[ "${{ github.head_ref }}" == "dev" ]]; then
+            echo "BASE_URL=https://dev-cooknify.netlify.app" >> $GITHUB_ENV
+          elif [[ "${{ github.head_ref }}" == "main" ]]; then
+            echo "BASE_URL=https://cooknify.netlify.app" >> $GITHUB_ENV
+          fi
+
+      - name: Log BASE_URL
+        run: echo "BASE_URL=$BASE_URL"
 
       - name: Install dependencies
         run: npm ci

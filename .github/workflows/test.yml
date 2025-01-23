@@ -24,11 +24,11 @@ jobs:
           node-version: lts/*
 
       - name: Set BASE_URL for development
-        if: github.ref == 'refs/heads/dev'
+        if: github.head_ref == 'dev'
         run: echo "BASE_URL=https://dev-cooknify.netlify.app" >> $GITHUB_ENV
 
       - name: Set BASE_URL for production
-        if: github.ref == 'refs/heads/main'
+        if: github.head_ref == 'main'
         run: echo "BASE_URL=https://cooknify.netlify.app" >> $GITHUB_ENV
 
       - name: Install dependencies
@@ -49,6 +49,8 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
+        env:
+          BASE_URL: ${{ env.BASE_URL }}
         run: npx playwright test
 
       - uses: actions/upload-artifact@v4

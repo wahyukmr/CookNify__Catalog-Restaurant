@@ -20,6 +20,7 @@ jobs:
     permissions:
       contents: read
       issues: write
+      actions: write # Perlu untuk membuat/mengupdate secrets
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -69,26 +70,34 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Generate new Netlify token
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           new_token=$(netlify api access_tokens:create --data '{ "name": "GitHub CI/CD Integration - CookNify" }' --auth $NETLIFY_AUTH_TOKEN | jq -r '.access_token')
           echo "NEW_NETLIFY_AUTH_TOKEN=$new_token" >> $GITHUB_ENV
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Update GitHub Secret
         uses: actions/github-script@v6
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
           script: |
-            const response = await github.rest.actions.getRepoPublicKey({
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit({ auth: process.env.PERSONAL_ACCESS_TOKEN });
+
+            const response = await octokit.actions.getRepoPublicKey({
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
+
             const encryptedValue = require('crypto')
-              .publicEncrypt(response.data.key, Buffer.from(process.env.NEW_NETLIFY_AUTH_TOKEN))
+              .publicEncrypt(
+                Buffer.from(response.data.key, 'base64'),
+                Buffer.from(process.env.NEW_NETLIFY_AUTH_TOKEN)
+              )
               .toString('base64');
-            await github.rest.actions.createOrUpdateRepoSecret({
+
+            await octokit.actions.createOrUpdateRepoSecret({
               owner: context.repo.owner,
               repo: context.repo.repo,
               secret_name: 'NETLIFY_AUTH_TOKEN',
@@ -97,17 +106,17 @@ jobs:
             });
 
       - name: Revoke old Netlify tokens for this project
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
         run: |
           netlify api access_tokens:list --auth $NETLIFY_AUTH_TOKEN | jq -r '.[] | select(.name | contains("GitHub CI/CD Integration - CookNify")) | .id' | while read token_id; do
             netlify api access_tokens:revoke --data "{ \"id\": \"$token_id\" }" --auth $NETLIFY_AUTH_TOKEN
           done
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Build
         run: npm run build
 
       - name: Deploy to Netlify
+        run: netlify deploy --prod --dir=dist --site=$NETLIFY_SITE_ID
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NEW_NETLIFY_AUTH_TOKEN }}
-        run: netlify deploy --prod --dir=dist --site=$NETLIFY_SITE_ID

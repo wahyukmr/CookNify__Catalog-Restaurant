@@ -82,22 +82,14 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
           script: |
-            const { Octokit } = require("@octokit/rest");
-            const octokit = new Octokit({ auth: process.env.PERSONAL_ACCESS_TOKEN });
-
-            const response = await octokit.actions.getRepoPublicKey({
+            const response = await github.rest.actions.getRepoPublicKey({
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
-
             const encryptedValue = require('crypto')
-              .publicEncrypt(
-                Buffer.from(response.data.key, 'base64'),
-                Buffer.from(process.env.NEW_NETLIFY_AUTH_TOKEN)
-              )
+              .publicEncrypt(response.data.key, Buffer.from(process.env.NEW_NETLIFY_AUTH_TOKEN))
               .toString('base64');
-
-            await octokit.actions.createOrUpdateRepoSecret({
+            await github.rest.actions.createOrUpdateRepoSecret({
               owner: context.repo.owner,
               repo: context.repo.repo,
               secret_name: 'NETLIFY_AUTH_TOKEN',

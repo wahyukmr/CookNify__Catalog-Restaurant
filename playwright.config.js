@@ -13,7 +13,7 @@ const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-module.exports = defineConfig({
+const config = defineConfig({
   testDir: './__tests__/e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -73,3 +73,13 @@ module.exports = defineConfig({
     },
   ],
 });
+
+if (process.env.BASE_URL) {
+  config.webServer = {
+    command: 'npm run serve',
+    url: 'http://localhost:3000',
+    reuseExistingServer: !process.env.CI,
+  };
+}
+
+module.exports = config;

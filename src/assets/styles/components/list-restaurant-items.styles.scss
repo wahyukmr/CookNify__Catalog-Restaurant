@@ -5,6 +5,7 @@
 @include m.box-sizing-inherit;
 @include m.focus-style;
 @include m.skeleton;
+@include m.screen-reader-only;
 
 @keyframes skeleton-loading {
   from {

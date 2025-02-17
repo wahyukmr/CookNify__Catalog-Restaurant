@@ -1,11 +1,123 @@
-import { test, expect } from '@playwright/test';
+import { test as baseTest, expect } from '@playwright/test';
+import { navigateFromHeroToRestoList, toggleDetailFavoriteButton } from '../helpers';
 
-test.describe('Favorite and Unfavorite Restaurant Flow', () => {
-  test('Navigate from Hero Section to Resto List Page', async ({ page }) => {
-    await page.goto('/');
-    const heroCtaBtn = page.locator('#heroCtaBtn');
-    await expect(heroCtaBtn).toHaveText('Explore Now');
-    await heroCtaBtn.click();
-    await expect(page).toHaveURL('#/resto-list');
+import { test } from '../fixtures/favoriteRestaurantFixture';
+import { navigateToRestaurantDetail } from '../helpers/pageNavigation';
+
+baseTest.describe('Favorite Restaurant Flow', () => {
+  baseTest.describe('without fixtures', () => {
+    baseTest(
+      'Should navigate from Hero Section to Resto List Page when clicking Hero Section CTA',
+      async ({ page }) => {
+        await navigateFromHeroToRestoList(page);
+      },
+    );
+
+    baseTest(
+      'Should display restaurant list and navigate to restaurant detail when clicking a restaurant card',
+      async ({ page }) => {
+        await page.goto('/#/resto-list');
+
+        const itemContainer = page.locator(
+          'resto-list-page list-restaurant-container #listItemContainer',
+        );
+        await expect(itemContainer).toBeVisible();
+
+        await itemContainer.scrollIntoViewIfNeeded();
+
+        const restoItems = itemContainer.locator('list-restaurant-items >> visible=true');
+        const restoFirstItem = restoItems.first();
+        await expect(restoFirstItem).toBeVisible();
+
+        const restoLastItem = restoItems.last();
+        await restoLastItem.scrollIntoViewIfNeeded();
+        expect(restoItems.last()).not.toBe(restoLastItem);
+
+        const restoStatusIcon = restoFirstItem.locator('#restoStatusIcon');
+        await expect(restoStatusIcon).toBeVisible();
+        await expect(restoStatusIcon.locator('.sr-only')).toHaveText(
+          'This restaurant is unfavorited',
+        );
+
+        const firstCardDetailsButton = restoFirstItem.locator('.restaurant-item__actions .anchor');
+        await expect(firstCardDetailsButton).toBeVisible();
+        await firstCardDetailsButton.click();
+
+        const restaurantDetailRegex = new RegExp('#/resto-list/detail/\\w+');
+        await expect(page).toHaveURL(restaurantDetailRegex);
+      },
+    );
+  });
+
+  test.describe('with fixtures', () => {
+    test('Should add a restaurant to favorites and show success notification', async ({
+      page,
+      getFirstRestaurantId,
+    }) => {
+      await navigateToRestaurantDetail(page, getFirstRestaurantId);
+
+      const detailFavoriteButton = await toggleDetailFavoriteButton(page);
+
+      await expect(detailFavoriteButton).toBeDisabled();
+
+      await page.waitForSelector('.notyf__message', { state: 'visible', timeout: 5000 });
+
+      const notification = page.locator('.notyf__message');
+      await expect(notification).toHaveCount(1);
+      await expect(notification).toHaveText(
+        'The restaurant has been added from the favorites list',
+      );
+
+      await page.waitForSelector('.notyf__message', {
+        state: 'hidden',
+        timeout: 5000,
+      });
+      await expect(detailFavoriteButton).toHaveText('Unfavorite');
+      await expect(detailFavoriteButton).toBeEnabled();
+    });
+
+    test('Should display favorited restaurant in the favorite list', async ({
+      page,
+      isMobile,
+      getFirstRestaurantId,
+    }) => {
+      await navigateToRestaurantDetail(page, getFirstRestaurantId);
+
+      const detailFavoriteButton = page.locator('#detailFavoriteBtn');
+      await expect(detailFavoriteButton).toBeVisible();
+
+      const isAlreadyFavorited = await detailFavoriteButton.getAttribute('aria-pressed');
+      if (isAlreadyFavorited !== 'true') {
+        await detailFavoriteButton.click();
+
+        await page.waitForSelector('.notyf__message', { state: 'visible', timeout: 5000 });
+        await page.waitForSelector('.notyf__message', { state: 'hidden', timeout: 5000 });
+      }
+
+      if (isMobile) {
+        const buttonOpenNavMenu = page.locator('header-component navigation-menu #btnOpen');
+        if (await buttonOpenNavMenu.isVisible()) {
+          await buttonOpenNavMenu.click();
+        }
+      }
+
+      const favoriteNavButton = page.locator('a[href="#/favorite"]');
+      await expect(favoriteNavButton).toBeVisible();
+      await favoriteNavButton.click();
+
+      await expect(page).toHaveURL(/#\/favorite/);
+
+      const itemContainer = page.locator(
+        'favorite-page list-restaurant-container #listItemContainer',
+      );
+      await expect(itemContainer).toBeVisible();
+
+      await itemContainer.scrollIntoViewIfNeeded();
+
+      await expect(itemContainer.locator('list-restaurant-items')).toHaveCount(1);
+      await expect(itemContainer.locator('list-restaurant-items .sr-only')).toHaveText(
+        'This restaurant is favorited',
+      );
+    });
   });
 });

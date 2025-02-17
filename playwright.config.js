@@ -8,7 +8,7 @@ const path = require('path');
  */
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
-const baseURL = process.env.BASE_URL || 'http://localhost:3000';
+const baseURL = process.env.BASE_URL || 'http://localhost:8080';
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -22,14 +22,14 @@ const config = defineConfig({
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 2 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     headless: true, // Jalankan browser dalam mode headless
     actionTimeout: 0, // Waktu tunggu tindakan (0 untuk menonaktifkan)
-    baseURL, // URL dasar untuk aplikasi Anda
+    baseURL, // URL dasar untuk aplikasi
     trace: 'on-first-retry', // Aktifkan pelacakan pada percobaan ulang pertama
     screenshot: 'only-on-failure', // Ambil screenshot hanya pada kegagalan
     video: 'retain-on-failure', // Simpan video hanya pada kegagalan
@@ -49,7 +49,9 @@ const config = defineConfig({
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        ...devices['Desktop Safari'],
+      },
     },
 
     /* Test against mobile viewports. */
@@ -59,13 +61,17 @@ const config = defineConfig({
     },
     {
       name: 'Mobile Safari',
-      use: { ...devices['iPhone 12'] },
+      use: {
+        ...devices['iPhone 12'],
+      },
     },
 
     /* Test against branded browsers. */
     {
       name: 'Microsoft Edge',
-      use: { ...devices['Desktop Edge'], channel: 'msedge' },
+      use: {
+        ...devices['Desktop Edge'],
+      },
     },
     {
       name: 'Google Chrome',
@@ -76,8 +82,8 @@ const config = defineConfig({
 
 if (!process.env.BASE_URL) {
   config.webServer = {
-    command: 'npm run serve',
-    url: 'http://localhost:3000',
+    command: 'npm run start-dev',
+    url: 'http://localhost:8080/',
     reuseExistingServer: !process.env.CI,
   };
 }

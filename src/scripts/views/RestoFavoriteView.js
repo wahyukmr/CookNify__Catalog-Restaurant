@@ -11,9 +11,7 @@ export default class RestoFavoriteView extends RestoBaseView {
     const itemNavigation = new RestoItemNavigationController(renderer.elements);
     const batchLoader = new RestoBatchLoader(renderer);
 
-    batchLoader.initialize();
-
     super({ renderer, itemNavigation, batchLoader });
-    this.initializeEvents();
+    this.initializeRestoListEvents();
   }
 }

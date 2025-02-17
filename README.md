@@ -51,5 +51,5 @@ The application continues to function even if there is no internet connection, t
 ### End to End Testing:
 
 - E2E testing focuses on testing the entire flow of the application, making sure it works as expected from the user's perspective.
-- Library used: Jest
+- Library used: Playwright
 - Test files are available in the `tests/e2e` directory.

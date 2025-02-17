@@ -89,34 +89,43 @@ class ListRestaurantItemDetail extends HTMLElement {
           
           <div class="restaurant__info-detail">
             <button type="button" id="detailFavoriteBtn" class="favorite-btn"></button>
+            
             <span class="rating">Rating: ⭐ ${rating || '0'}</span>
           </div>
           
           <div class="restaurant__info-categories">
             <h3 class="header">Categories</h3>
-            <ul id="categories" class="categories__items"></ul>
+            <ul id="categories" class="categories__items">
+              <li>No categories available.</li>
+            </ul>
           </div>
           
           <div class="restaurant__info-menus">
             <div class="menu">
               <h3 class="header">Food Menu</h3>
-              <ul class="menu__items"></ul>
+              <ul class="menu__items">
+                <li>No food menu available.</li>
+              </ul>
             </div>
             <div class="menu">
               <h3 class="header">Drink Menu</h3>
-              <ul class="menu__items"></ul>
+              <ul class="menu__items">
+                <li>No drink menu available.</li>
+              </ul>
             </div>
           </div>
         </div>
         
         <div class="restaurant__reviews">
           <h3 class="header">Customer Reviews</h3>
-          <div id="review" class="review__table-container"></div>
+          <div id="review" class="review__table-container">
+            <p>No reviews yet.</p>
+          </div>
         </div>
         
         <div class="restaurant__descriptions">
           <h3 class="header">Descriptions</h3>
-          <p class="description">${description}</p>
+          <p class="description">${description || 'No description available for this restaurant.'}</p>
         </div>
         
         <div class="restaurant__review">

@@ -8,7 +8,7 @@ const path = require('path');
  */
 require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
-const baseURL = process.env.BASE_URL || 'http://localhost:8080';
+const baseURL = process.env.BASE_URL || 'http://localhost:3000';
 
 /**
  * @see https://playwright.dev/docs/test-configuration
@@ -82,8 +82,8 @@ const config = defineConfig({
 
 if (!process.env.BASE_URL) {
   config.webServer = {
-    command: 'npm run start-dev',
-    url: 'http://localhost:8080/',
+    command: 'npm run serve',
+    url: 'http://localhost:3000/',
     reuseExistingServer: !process.env.CI,
   };
 }

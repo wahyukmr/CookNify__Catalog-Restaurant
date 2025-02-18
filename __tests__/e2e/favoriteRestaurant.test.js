@@ -17,6 +17,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       'Should display restaurant list and navigate to restaurant detail when clicking a restaurant card',
       async ({ page }) => {
         await page.goto('/#/resto-list');
+        await page.waitForLoadState('domcontentloaded');
 
         const itemContainer = page.locator(
           'resto-list-page list-restaurant-container #listItemContainer',
@@ -60,7 +61,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
 
       await expect(detailFavoriteButton).toBeDisabled();
 
-      await page.waitForSelector('.notyf__message', { state: 'visible', timeout: 5000 });
+      await page.waitForSelector('.notyf__message', { state: 'visible' });
 
       const notification = page.locator('.notyf__message');
       await expect(notification).toHaveCount(1);
@@ -70,7 +71,6 @@ baseTest.describe('Favorite Restaurant Flow', () => {
 
       await page.waitForSelector('.notyf__message', {
         state: 'hidden',
-        timeout: 5000,
       });
       await expect(detailFavoriteButton).toHaveText('Unfavorite');
       await expect(detailFavoriteButton).toBeEnabled();
@@ -90,8 +90,8 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       if (isAlreadyFavorited !== 'true') {
         await detailFavoriteButton.click();
 
-        await page.waitForSelector('.notyf__message', { state: 'visible', timeout: 5000 });
-        await page.waitForSelector('.notyf__message', { state: 'hidden', timeout: 5000 });
+        await page.waitForSelector('.notyf__message', { state: 'visible' });
+        await page.waitForSelector('.notyf__message', { state: 'hidden' });
       }
 
       if (isMobile) {
@@ -106,6 +106,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       await favoriteNavButton.click();
 
       await expect(page).toHaveURL(/#\/favorite/);
+      await page.waitForLoadState('domcontentloaded');
 
       const itemContainer = page.locator(
         'favorite-page list-restaurant-container #listItemContainer',

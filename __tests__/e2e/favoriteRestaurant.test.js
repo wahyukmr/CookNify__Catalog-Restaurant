@@ -17,7 +17,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       'Should display restaurant list and navigate to restaurant detail when clicking a restaurant card',
       async ({ page }) => {
         await page.goto('/#/resto-list');
-        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('networkidle');
 
         const itemContainer = page.locator(
           'resto-list-page list-restaurant-container #listItemContainer',
@@ -27,6 +27,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
         await itemContainer.scrollIntoViewIfNeeded();
 
         const restoItems = itemContainer.locator('list-restaurant-items');
+        await expect(restoItems).toBeVisible();
 
         const restoFirstItem = restoItems.first();
         await expect(restoFirstItem).toBeVisible();
@@ -82,13 +83,17 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       isMobile,
       getFirstRestaurantId,
     }) => {
+      console.log(await getFirstRestaurantId());
+
       await navigateToRestaurantDetail(page, getFirstRestaurantId);
 
       const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-      await expect(detailFavoriteButton).toBeVisible();
+      await page.waitForSelector('#detailFavoriteBtn', { state: 'visible' });
 
       const isAlreadyFavorited = await detailFavoriteButton.getAttribute('aria-pressed');
       if (isAlreadyFavorited !== 'true') {
+        await expect(detailFavoriteButton).toBeVisible();
+
         await detailFavoriteButton.click();
 
         await page.waitForSelector('.notyf__message', { state: 'visible' });

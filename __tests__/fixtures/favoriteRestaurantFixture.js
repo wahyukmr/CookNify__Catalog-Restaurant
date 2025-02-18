@@ -3,32 +3,23 @@ import { test as base, expect } from '@playwright/test';
 export const test = base.extend({
   getFirstRestaurantId: async ({ page }, use) => {
     await page.goto('/#/resto-list');
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState('networkidle');
 
-    const itemContainer = page.locator(
-      'resto-list-page list-restaurant-container #listItemContainer',
+    const firstRestaurant = page.locator(
+      'resto-list-page list-restaurant-container #listItemContainer list-restaurant-items:first-child',
     );
-    await expect(itemContainer).toBeVisible();
 
-    await itemContainer.scrollIntoViewIfNeeded();
+    await expect(firstRestaurant).toBeVisible();
 
-    const restoItems = itemContainer.locator('list-restaurant-items');
-    const restoFirstItem = restoItems.first();
-    await expect(restoFirstItem).toBeVisible();
-
-    const detailLink = restoFirstItem.locator('.restaurant-item__actions .anchor');
+    const detailLink = firstRestaurant.locator('.restaurant-item__actions .anchor');
     await expect(detailLink).toBeVisible();
 
     const href = await detailLink.getAttribute('href');
-    if (!href) {
-      throw new Error('href not found on the detail link');
-    }
+    if (!href) throw new Error('Error: Tidak dapat menemukan atribut href dari detail link');
 
     const restaurantId = href.split('/').pop();
-    if (!restaurantId) {
-      throw new Error('Failed to extract restaurant ID from href');
-    }
+    if (!restaurantId) throw new Error('Error: Gagal mengekstrak ID restoran dari href');
 
-    await use(() => Promise.resolve(restaurantId));
+    await use(restaurantId);
   },
 });

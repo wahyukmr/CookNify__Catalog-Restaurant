@@ -28,7 +28,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       page,
     }) => {
       await page.goto('/#/resto-list');
-      await page.waitForLoadState('domcontentloaded');
+      await page.waitForLoadState('networkidle');
 
       const itemContainer = page.locator(
         'resto-list-page list-restaurant-container #listItemContainer',
@@ -38,6 +38,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       await itemContainer.scrollIntoViewIfNeeded();
 
       const restoItems = itemContainer.locator('list-restaurant-items');
+      await expect(restoItems).toBeVisible();
 
       const restoFirstItem = restoItems.first();
       await expect(restoFirstItem).toBeVisible();

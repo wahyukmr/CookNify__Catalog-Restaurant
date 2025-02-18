@@ -46,7 +46,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       await restoLastItem.scrollIntoViewIfNeeded();
       expect(restoItems.last()).not.toBe(restoLastItem);
 
-      const restoStatusIcon = restoFirstItem.locator('#restoStatusIcon');
+      const restoStatusIcon = restoFirstItem.locator('.restaurant-item__favorite');
       await expect(restoStatusIcon).toBeVisible();
       await expect(restoStatusIcon.locator('.sr-only')).toHaveText('This restaurant is favorited');
 

@@ -1,14 +1,15 @@
-# Name of workflow
-name: Test Workflow
+name: Testing
 
-# Trigger workflow on all pull requests
 on:
+  push:
+    branches:
+      - dev
+      - main
   pull_request:
     branches:
       - dev
       - main
 
-# Jobs to carry out
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -22,17 +23,26 @@ jobs:
         with:
           node-version: lts/*
 
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Debug GitHub Context
         run: |
           echo "Branch ref: ${{ github.ref }}"
+          echo "Branch name: ${{ github.ref_name }}"
           echo "Head ref: ${{ github.head_ref }}"
           echo "Base ref: ${{ github.base_ref }}"
 
       - name: Set BASE_URL dynamically
         run: |
-          if [[ "${{ github.base_ref }}" == "dev" ]]; then
+          if [[ "${{ github.ref }}" == "refs/heads/dev" || "${{ github.base_ref }}" == "dev" ]]; then
             echo "BASE_URL=https://dev-cooknify.netlify.app" >> $GITHUB_ENV
-          elif [[ "${{ github.base_ref }}" == "main" ]]; then
+          elif [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.base_ref }}" == "main" ]]; then
             echo "BASE_URL=https://cooknify.netlify.app" >> $GITHUB_ENV
           fi
 
@@ -50,8 +60,17 @@ jobs:
           echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
           echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
 
+      - name: Verify .env File
+        run: cat .env
+
       - name: Run Jest tests
         run: npm test
+
+      - name: Debug Changed Files
+        run: git diff --name-only ${{ github.base_ref }}..${{ github.head_ref }}
+
+      - name: Clear Playwright Cache
+        run: rm -rf ~/.cache/ms-playwright
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
@@ -61,7 +80,8 @@ jobs:
           BASE_URL: ${{ env.BASE_URL }}
         run: npx playwright test
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report

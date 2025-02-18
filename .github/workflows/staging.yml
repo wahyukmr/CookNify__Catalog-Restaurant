@@ -1,9 +1,9 @@
-name: Build & Deploy to Production
+name: Build & Deploy to Staging
 
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    environment: production
+    environment: staging
 
     steps:
       - name: Download Build Artifacts
@@ -45,10 +45,10 @@ jobs:
           path: dist
           key: ${{ runner.os }}-build-${{ github.sha }}
 
-      - name: Deploy to netlify (Production)
+      - name: Deploy to netlify
         uses: netlify/actions/cli@master
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
         with:
           args: deploy --dir=dist --prod

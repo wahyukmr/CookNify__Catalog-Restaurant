@@ -49,6 +49,9 @@ jobs:
       - name: Log BASE_URL
         run: echo "BASE_URL=$BASE_URL"
 
+      - name: Checkout PR branch
+        run: git checkout ${{ github.head_ref }}
+
       - name: Install dependencies
         run: npm ci
 

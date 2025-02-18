@@ -22,7 +22,7 @@ jobs:
         run: npm ci
 
       - name: Remove Old Build
-        run: rm -rf build
+        run: rm -rf dist
 
       - name: Build Project
         run: npm run build

@@ -83,12 +83,9 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       isMobile,
       getFirstRestaurantId,
     }) => {
-      console.log(await getFirstRestaurantId());
-
       await navigateToRestaurantDetail(page, getFirstRestaurantId);
 
-      const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-      await page.waitForSelector('#detailFavoriteBtn', { state: 'visible' });
+      const detailFavoriteButton = await toggleDetailFavoriteButton(page);
 
       const isAlreadyFavorited = await detailFavoriteButton.getAttribute('aria-pressed');
       if (isAlreadyFavorited !== 'true') {

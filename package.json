@@ -7,6 +7,8 @@
     "start-dev": "webpack-dev-server --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "serve": "http-server dist -a localhost -p 3000",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "e2e": "npx playwright test",

@@ -66,9 +66,6 @@ jobs:
       - name: Run Jest tests
         run: npm test
 
-      - name: Debug Changed Files
-        run: git diff --name-only ${{ github.base_ref }}..${{ github.head_ref }}
-
       - name: Clear Playwright Cache
         run: rm -rf ~/.cache/ms-playwright
 

@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: lts/*
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Cache Node.js modules
         uses: actions/cache@v3
         with:
@@ -40,20 +43,6 @@ jobs:
           echo "Base ref: ${{ github.base_ref }}"
 
       # Jika event adalah pull_request, lakukan build dan deploy preview
-      - name: Build Project (for PR)
-        if: ${{ github.event_name == 'pull_request' }}
-        run: npm run build
-
-      - name: Deploy Preview (only on PR)
-        if: ${{ github.event_name == 'pull_request' }}
-        id: deploy_preview
-        uses: netlify/actions/cli@master
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
-        with:
-          args: deploy --dir=dist
-
       - name: Set BASE_URL for PR Deploy Preview
         if: ${{ github.event_name == 'pull_request' }}
         run: echo "BASE_URL=${{ steps.deploy_preview.outputs.deploy-url }}" >> $GITHUB_ENV
@@ -71,9 +60,6 @@ jobs:
       - name: Log BASE_URL
         run: echo "BASE_URL=$BASE_URL"
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Create .env file
         run: |
           touch .env
@@ -84,6 +70,20 @@ jobs:
 
       - name: Verify .env File
         run: cat .env
+
+      - name: Build Project (for PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm run build
+
+      - name: Deploy Preview (only on PR)
+        if: ${{ github.event_name == 'pull_request' }}
+        id: deploy_preview
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
+        with:
+          args: deploy --dir=dist
 
       - name: Run Jest tests
         run: npm test

@@ -28,7 +28,6 @@ baseTest.describe('Favorite Restaurant Flow', () => {
         const restoItems = itemContainer.locator('list-restaurant-items');
 
         const restoFirstItem = restoItems.first();
-        await restoFirstItem.waitFor({ state: 'visible' });
         await expect(restoFirstItem).toBeVisible();
 
         const restoLastItem = restoItems.last();

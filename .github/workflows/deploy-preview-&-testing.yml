@@ -65,6 +65,7 @@ jobs:
       - name: Set BASE_URL for PR Deploy Preview
         if: ${{ github.event_name == 'pull_request' }}
         run: |
+          echo "Deploy Preview Outputs: ${{ toJson(steps.deploy_preview.outputs) }}"
           echo "BASE_URL=${{ toJson(steps.deploy_preview.outputs) }}" >> $GITHUB_ENV
 
       # Untuk push (bukan PR), gunakan URL statis sesuai branch

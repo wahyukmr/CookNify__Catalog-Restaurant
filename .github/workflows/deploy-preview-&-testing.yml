@@ -2,16 +2,13 @@ name: Deploy Preview & Testing for PR
 
 on:
   push:
-    branches:
-      - dev
-      - main
+    branches: [main, master]
   pull_request:
-    branches:
-      - dev
-      - main
+    branches: [main, master]
 
 jobs:
   test:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
 
     steps:
@@ -22,14 +19,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-
-      - name: Cache Node.js modules
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
@@ -60,8 +50,7 @@ jobs:
       - name: Set BASE_URL for PR Deploy Preview
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "Deploy Preview Outputs: ${{ toJson(steps.deploy_preview.outputs) }}"
-          echo "BASE_URL=${{ steps.deploy_preview.outputs.deploy-url }}" >> $GITHUB_ENV
+          echo "BASE_URL=${{ toJson(steps.deploy_preview.outputs.NETLIFY_URL) }}" >> $GITHUB_ENV
 
       # Untuk push (bukan PR), gunakan URL statis sesuai branch
       - name: Set BASE_URL dynamically for push events

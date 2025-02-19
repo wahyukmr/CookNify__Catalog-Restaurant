@@ -45,7 +45,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
         with:
-          args: deploy --dir=dist --json  --message "Deploy Preview for PR ${{ github.event.number }}" --alias "pr-${{ github.event.number }}"
+          args: deploy --dir=dist --json
 
       - name: Set BASE_URL for PR Deploy Preview
         if: ${{ github.event_name == 'pull_request' }}

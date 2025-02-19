@@ -25,6 +25,7 @@ baseTest.describe('Favorite Restaurant Flow', () => {
 
         await itemContainer.scrollIntoViewIfNeeded();
 
+        await page.waitForSelector('list-restaurant-items', { state: 'visible' });
         const restoItems = itemContainer.locator('list-restaurant-items');
 
         const restoFirstItem = restoItems.first();

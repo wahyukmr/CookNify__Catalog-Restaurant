@@ -83,6 +83,7 @@ const config = defineConfig({
 });
 
 if (!process.env.BASE_URL) {
+  console.log('kokokokokokokokokookokokookokokookokokoko');
   config.webServer = {
     command: 'npm run serve',
     url: 'http://localhost:3000/',

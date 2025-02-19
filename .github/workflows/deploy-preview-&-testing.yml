@@ -55,11 +55,13 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
         with:
-          args: deploy --dir=dist
+          args: deploy --dir=dist --json
 
       - name: Set BASE_URL for PR Deploy Preview
         if: ${{ github.event_name == 'pull_request' }}
-        run: echo "BASE_URL=${{ steps.deploy_preview.outputs.deploy-url }}" >> $GITHUB_ENV
+        run: |
+          echo "Deploy Preview Outputs: ${{ toJson(steps.deploy_preview.outputs) }}"
+          echo "BASE_URL=${{ steps.deploy_preview.outputs.deploy-url }}" >> $GITHUB_ENV
 
       # Untuk push (bukan PR), gunakan URL statis sesuai branch
       - name: Set BASE_URL dynamically for push events

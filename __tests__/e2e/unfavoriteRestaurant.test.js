@@ -40,6 +40,11 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       const restoItems = itemContainer.locator('list-restaurant-items');
 
       const restoFirstItem = restoItems.first();
+      await restoFirstItem.waitFor({ state: 'visible' });
+
+      console.log(await restoFirstItem.count()); // Pastikan jumlahnya lebih dari 0
+      console.log(await restoFirstItem.isVisible()); // Cek apakah elemen terlihat
+
       await expect(restoFirstItem).toBeVisible();
 
       const restoLastItem = restoItems.last();

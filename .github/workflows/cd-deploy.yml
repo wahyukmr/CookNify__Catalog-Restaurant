@@ -1,0 +1,54 @@
+name: CD - Deploy to Netlify
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Set BASE_URL
+        run: echo "BASE_URL=${{ github.base_ref == 'dev' && 'dev--' || '' }}" >> $GITHUB_ENV
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './dist'
+          production-branch: ${{ github.base_ref }}
+          deploy-message: 'Deploying ${{ github.base_ref }} via GitHub Actions'
+          enable-pull-request-comment: false
+          alias: ${{ github.base_ref }}
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Run Jest tests on Deployed Site
+        run: npm test
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright Tests on Deployed Site
+        env:
+          BASE_URL: 'https://${{ env.BASE_URL }}cooknify.netlify.app'
+        run: npx playwright test

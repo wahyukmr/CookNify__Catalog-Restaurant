@@ -36,17 +36,6 @@ jobs:
           echo "Head ref: ${{ github.head_ref }}"
           echo "Base ref: ${{ github.base_ref }}"
 
-      - name: Create .env file
-        run: |
-          touch .env
-          echo BASE_API_URL=${{ secrets.BASE_API_URL }} >> .env
-          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
-          echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
-          echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
-
-      - name: Verify .env File
-        run: cat .env
-
       # Untuk PR, bangun dan deploy preview terlebih dahulu
       - name: Build Project (for PR)
         if: ${{ github.event_name == 'pull_request' }}
@@ -60,7 +49,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.DEV_NETLIFY_SITE_ID }}
         with:
-          args: deploy --dir=dist --json
+          args: deploy --dir=dist --json --message "Deploy Preview for PR #${{ github.event.number }}" --alias "pr-${{ github.event.number }}"
 
       - name: Set BASE_URL for PR Deploy Preview
         if: ${{ github.event_name == 'pull_request' }}
@@ -77,6 +66,17 @@ jobs:
           elif [[ "${{ github.ref }}" == "refs/heads/main" || "${{ github.base_ref }}" == "main" ]]; then
             echo "BASE_URL=https://cooknify.netlify.app" >> $GITHUB_ENV
           fi
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo BASE_API_URL=${{ secrets.BASE_API_URL }} >> .env
+          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
+          echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
+          echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
+
+      - name: Verify .env File
+        run: cat .env
 
       - name: Log BASE_URL
         run: echo "BASE_URL=$BASE_URL"

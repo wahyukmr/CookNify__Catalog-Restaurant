@@ -3,7 +3,6 @@ import { test as base, expect } from '@playwright/test';
 export const test = base.extend({
   getFirstRestaurantId: async ({ page }, use) => {
     await page.goto('/#/resto-list');
-    await page.waitForLoadState('domcontentloaded');
 
     const itemContainer = page.locator(
       'resto-list-page list-restaurant-container #listItemContainer',

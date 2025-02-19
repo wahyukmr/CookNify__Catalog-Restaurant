@@ -17,7 +17,6 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       'Should display restaurant list and navigate to restaurant detail when clicking a restaurant card',
       async ({ page }) => {
         await page.goto('/#/resto-list');
-        await page.waitForLoadState('networkidle');
 
         const itemContainer = page.locator(
           'resto-list-page list-restaurant-container #listItemContainer',
@@ -109,7 +108,6 @@ baseTest.describe('Favorite Restaurant Flow', () => {
       await favoriteNavButton.click();
 
       await expect(page).toHaveURL(/#\/favorite/);
-      await page.waitForLoadState('domcontentloaded');
 
       const itemContainer = page.locator(
         'favorite-page list-restaurant-container #listItemContainer',

@@ -2,9 +2,13 @@ name: Deploy Preview & Testing for PR
 
 on:
   push:
-    branches: [main, dev]
+    branches:
+      - main
+      - dev
   pull_request:
-    branches: [main, dev]
+    branches:
+      - main
+      - dev
 
 jobs:
   test:
@@ -32,6 +36,17 @@ jobs:
           echo "Head ref: ${{ github.head_ref }}"
           echo "Base ref: ${{ github.base_ref }}"
 
+      - name: Create .env file
+        run: |
+          touch .env
+          echo BASE_API_URL=${{ secrets.BASE_API_URL }} >> .env
+          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
+          echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
+          echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
+
+      - name: Verify .env File
+        run: cat .env
+
       # Untuk PR, bangun dan deploy preview terlebih dahulu
       - name: Build Project (for PR)
         if: ${{ github.event_name == 'pull_request' }}
@@ -50,7 +65,7 @@ jobs:
       - name: Set BASE_URL for PR Deploy Preview
         if: ${{ github.event_name == 'pull_request' }}
         run: |
-          echo "BASE_URL=${{ toJson(steps.deploy_preview.outputs.NETLIFY_URL) }}" >> $GITHUB_ENV
+          echo "BASE_URL=${{ toJson(steps.deploy_preview.outputs) }}" >> $GITHUB_ENV
 
       # Untuk push (bukan PR), gunakan URL statis sesuai branch
       - name: Set BASE_URL dynamically for push events
@@ -64,17 +79,6 @@ jobs:
 
       - name: Log BASE_URL
         run: echo "BASE_URL=$BASE_URL"
-
-      - name: Create .env file
-        run: |
-          touch .env
-          echo BASE_API_URL=${{ secrets.BASE_API_URL }} >> .env
-          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
-          echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
-          echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
-
-      - name: Verify .env File
-        run: cat .env
 
       - name: Run Jest tests
         run: npm test

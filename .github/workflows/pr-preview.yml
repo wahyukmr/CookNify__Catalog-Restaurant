@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   deploy-preview:
     runs-on: ubuntu-latest
@@ -25,11 +29,11 @@ jobs:
         run: npm run build
 
       - name: Deploy to Netlify (PR Preview)
+        id: netlify
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './dist'
-          deploy-message: 'Preview for PR #${{ github.event.number }}'
-          alias: deploy-preview-${{ github.event.number }}
+          deploy-message: 'Preview for PR #${{ github.event.pull_request.number }}'
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -37,7 +41,7 @@ jobs:
       - name: Post Comment with Preview Link
         uses: thollander/actions-comment-pull-request@v3
         with:
-          message: 'PR Preview deployed: https://deploy-preview-${{ github.event.number }}--cooknify.netlify.app'
+          message: 'PR Preview deployed: ${{ steps.netlify.outputs.deploy-url }}'
 
   testing:
     runs-on: ubuntu-latest
@@ -73,7 +77,7 @@ jobs:
 
       - name: Run Playwright tests
         env:
-          BASE_URL: 'https://deploy-preview-${{ github.event.number }}--cooknify.netlify.app'
+          BASE_URL: '${{ steps.netlify.outputs.deploy-url }}'
         run: npx playwright test
 
       - name: Upload Playwright Trace

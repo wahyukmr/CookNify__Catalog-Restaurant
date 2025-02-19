@@ -27,7 +27,6 @@ const config = defineConfig({
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    serviceWorkers: 'block',
     headless: true, // Jalankan browser dalam mode headless
     actionTimeout: 0, // Waktu tunggu tindakan (0 untuk menonaktifkan)
     baseURL, // URL dasar untuk aplikasi

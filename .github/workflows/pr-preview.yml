@@ -35,9 +35,6 @@ jobs:
           echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
           echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
 
-      - name: Set BASE_URL
-        run: echo "BASE_URL=${{ steps.netlify.outputs.deploy-url }}" >> $GITHUB_ENV
-
       - name: Verify .env before build
         run: ls -la && cat .env
 
@@ -56,18 +53,12 @@ jobs:
 
       # Pastikan URL memiliki protokol HTTPS
       - name: Construct deploy URL with HTTPS
-        id: construct-url
-        run: |
-          DEPLOY_URL="${{ steps.netlify.outputs.deploy-url }}"
-          if [[ $DEPLOY_URL != http* ]]; then
-            DEPLOY_URL="https://$DEPLOY_URL"
-          fi
-          echo "deploy-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+        run: DEPLOY_URL="${{ steps.netlify.outputs.deploy-url }}"
 
-      - name: Set BASE_URL 2
-        run: echo "BASE_URL=${{ steps.netlify.outputs.deploy-url }}" >> $GITHUB_ENV
+      - name: Update .env with BASE_URL
+        run: echo "BASE_URL=${{ steps.construct-url.outputs.deploy-url }}" >> .env
 
-      - name: Verify .env after build
+      - name: Verify .env after update
         run: ls -la && cat .env
 
       - name: Post Comment with Preview Link

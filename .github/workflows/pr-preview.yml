@@ -43,9 +43,9 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
       - name: Debug Netlify Output
-        run: echo "Deploy URL from Netlify: $DEPLOY_URL"
         env:
           DEPLOY_URL: ${{ steps.netlify.outputs.deploy-url }}
+        run: echo "Deploy URL from Netlify=$DEPLOY_URL"
 
       - name: Post Comment with Preview Link
         uses: thollander/actions-comment-pull-request@v3
@@ -74,7 +74,7 @@ jobs:
           DEPLOY_URL: ${{ needs.deploy-preview.outputs.deploy-url }}
 
       - name: Verify BASE_URL
-        run: echo "BASE_URL from Deploy Preview: $BASE_URL"
+        run: echo "BASE_URL from Deploy Preview=$BASE_URL"
 
       - name: Create .env file
         run: |

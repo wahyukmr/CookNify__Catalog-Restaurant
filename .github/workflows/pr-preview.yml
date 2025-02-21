@@ -34,7 +34,6 @@ jobs:
           echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
           echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
           echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
-          echo "BASE_URL=https://localhost" >> .env
 
       - name: Verify .env before build
         run: cat .env
@@ -52,10 +51,15 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      - name: Debug Netlify Output
-        env:
-          DEPLOY_URL: ${{ steps.netlify.outputs.deploy-url }}
-        run: echo "Deploy URL from Netlify=$DEPLOY_URL"
+      # Pastikan URL memiliki protokol HTTPS
+      - name: Construct deploy URL with HTTPS
+        id: construct-url
+        run: |
+          DEPLOY_URL="${{ steps.netlify.outputs.deploy-url }}"
+          if [[ $DEPLOY_URL != http* ]]; then
+            DEPLOY_URL="https://$DEPLOY_URL"
+          fi
+          echo "deploy-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
 
       - name: Post Comment with Preview Link
         uses: thollander/actions-comment-pull-request@v3
@@ -84,19 +88,7 @@ jobs:
           DEPLOY_URL: ${{ needs.deploy-preview.outputs.deploy-url }}
 
       - name: Verify BASE_URL
-        run: echo "BASE_URL from Deploy Preview=$BASE_URL"
-
-      - name: Create .env file
-        run: |
-          touch .env
-          echo "BASE_API_URL=${{ secrets.BASE_API_URL }}" >> .env
-          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
-          echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
-          echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
-          echo "BASE_URL=$BASE_URL" >> .env
-
-      - name: Verify .env File
-        run: cat .env
+        run: echo "BASE_URL is $BASE_URL"
 
       - name: Run Jest tests
         run: npm test
@@ -107,7 +99,13 @@ jobs:
       - name: Run Playwright tests
         env:
           BASE_URL: ${{ env.BASE_URL }}
-        run: npx playwright test
+          BASE_API_URL: ${{ secrets.BASE_API_URL }}
+          DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+          DATABASE_VERSION: ${{ secrets.DATABASE_VERSION }}
+          DATABASE_OBJECT_STORE_NAME: ${{ secrets.DATABASE_OBJECT_STORE_NAME }}
+        run: |
+          echo "Testing URL: $BASE_URL"
+          npx playwright test --config=playwright.config.js
 
       - name: Upload Playwright Trace
         uses: actions/upload-artifact@v4

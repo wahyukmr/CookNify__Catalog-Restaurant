@@ -56,7 +56,7 @@ jobs:
         run: DEPLOY_URL="${{ steps.netlify.outputs.deploy-url }}"
 
       - name: Update .env with BASE_URL
-        run: echo "BASE_URL=${{ steps.construct-url.outputs.deploy-url }}" >> .env
+        run: BASE_URL="${{ steps.construct-url.outputs.deploy-url }}" >> .env
 
       - name: Verify .env after update
         run: ls -la && cat .env

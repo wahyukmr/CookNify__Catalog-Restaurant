@@ -27,18 +27,6 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      # 🛠️ Buat file .env SEBELUM build
-      - name: Create .env file
-        run: |
-          touch .env
-          echo BASE_API_URL=${{ secrets.BASE_API_URL }} >> .env
-          echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
-          echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
-          echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
-
-      - name: Verify .env before build
-        run: cat .env
-
       - name: Build Project
         run: npm run build
 

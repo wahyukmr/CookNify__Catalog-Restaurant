@@ -35,13 +35,10 @@ jobs:
           echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
           echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
           echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
-          echo BASE_URL=${{ github.event.pull_request.head.ref }} >> .env  # atau gunakan variable yang sesuai
+          echo BASE_URL="https://localhost" >> .env
 
       - name: Verify .env before build
         run: ls -la && cat .env
-
-      - name: Log BASE_URL
-        run: echo "BASE_URL=$BASE_URL"
 
       - name: Build Project
         run: npm run build

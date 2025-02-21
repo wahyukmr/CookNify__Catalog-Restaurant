@@ -12,7 +12,7 @@ jobs:
   deploy-preview:
     runs-on: ubuntu-latest
     outputs:
-      deploy_url: ${{ steps.netlify.outputs.deploy-url }}
+      deploy-url: ${{ steps.netlify.outputs.deploy-url }}
 
     steps:
       - name: Checkout repository
@@ -40,6 +40,9 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
+      - name: Log Netlify Deploy URL
+        run: 'Deploy URL: ${{ steps.netlify.outputs.deploy-url }}'
+
       - name: Post Comment with Preview Link
         uses: thollander/actions-comment-pull-request@v3
         with:
@@ -61,6 +64,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set BASE_URL
+        run: echo "BASE_URL=${{ needs.deploy-preview.outputs.deploy-url }}" >> $GITHUB_ENV
+
       - name: Create .env file
         run: |
           touch .env
@@ -68,10 +74,13 @@ jobs:
           echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
           echo DATABASE_VERSION=${{ secrets.DATABASE_VERSION }} >> .env
           echo DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }} >> .env
-          echo BASE_URL=${{ needs.deploy-preview.outputs.deploy_url }} >> .env
+          echo BASE_URL=${{ needs.deploy-preview.outputs.deploy-url }} >> .env
 
       - name: Verify .env File
         run: cat .env
+
+      - name: Log BASE_URL
+        run: echo "BASE_URL=$BASE_URL"
 
       - name: Run Jest tests
         run: npm test
@@ -80,6 +89,8 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
+        env:
+          BASE_URL: ${{ needs.deploy-preview.outputs.deploy-url }}
         run: npx playwright test
 
       - name: Upload Playwright Trace

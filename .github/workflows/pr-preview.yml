@@ -82,6 +82,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "BASE_API_URL=${{ secrets.BASE_API_URL }}" >> .env
+          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
+          echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
+          echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
+
+      - name: Verify .env before build
+        run: cat .env
+
       - name: Set BASE_URL from Deploy Preview
         run: echo "BASE_URL=$DEPLOY_URL" >> $GITHUB_ENV
         env:

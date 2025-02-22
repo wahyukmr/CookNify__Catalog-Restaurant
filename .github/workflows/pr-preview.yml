@@ -91,7 +91,16 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Verify .env after update
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "BASE_API_URL=${{ secrets.BASE_API_URL }}" >> .env
+          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
+          echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
+          echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
+          echo "BASE_URL=${{ needs.deploy-preview.outputs.deploy-url }}" >> .env
+
+      - name: Verify .env before build
         run: ls -la && cat .env
 
   #     - name: Create .env file

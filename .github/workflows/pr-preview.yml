@@ -12,7 +12,7 @@ jobs:
   deploy-preview:
     runs-on: ubuntu-latest
     outputs:
-      deploy-url: ${{ steps.netlify.outputs.deploy-url }}
+      deploy-url: ${{ steps.construct-url.outputs.deploy-url }}
 
     steps:
       - name: Checkout repository
@@ -63,12 +63,6 @@ jobs:
 
       - name: Verify deploy-url
         run: echo "DEPLOY_URL=${{ steps.construct-url.outputs.deploy-url }}"
-
-      - name: Update .env with BASE_URL
-        run: echo "BASE_URL=${{ steps.construct-url.outputs.deploy-url }}" >> .env
-
-      - name: Verify .env after update
-        run: ls -la && cat .env
 
       - name: Post Comment with Preview Link
         uses: thollander/actions-comment-pull-request@v3

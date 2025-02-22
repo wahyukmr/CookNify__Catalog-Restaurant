@@ -41,6 +41,9 @@ jobs:
       - name: Build Project
         run: npm run build
 
+      - name: Clear Cache Before Deploy
+        run: rm -rf ~/.npm ~/.cache
+
       - name: Deploy to Netlify (PR Preview)
         id: netlify
         uses: nwtgck/actions-netlify@v3.0
@@ -51,15 +54,22 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      # Pastikan URL memiliki protokol HTTPS
+      - name: Debug Netlify Output
+        run: echo "Raw Deploy URL: ${{ steps.netlify.outputs.deploy-url }}"
+
       - name: Construct deploy URL with HTTPS
         id: construct-url
         run: |
           DEPLOY_URL="${{ steps.netlify.outputs.deploy-url }}"
+          if [[ -z "$DEPLOY_URL" ]]; then
+            echo "🚨 Error: Deploy URL is empty!"
+            exit 1
+          fi
           if [[ $DEPLOY_URL != http* ]]; then
             DEPLOY_URL="https://$DEPLOY_URL"
           fi
           echo "deploy-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Verify deploy-url
         run: echo "DEPLOY_URL=${{ steps.construct-url.outputs.deploy-url }}"
@@ -67,7 +77,7 @@ jobs:
       - name: Post Comment with Preview Link
         uses: thollander/actions-comment-pull-request@v3
         with:
-          message: 'PR Preview deployed: ${{ steps.netlify.outputs.deploy-url }}'
+          message: 'PR Preview deployed: ${{ steps.construct-url.outputs.deploy-url }}'
 
   testing:
     runs-on: ubuntu-latest
@@ -85,6 +95,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Debug BASE_URL before creating .env
+        run: echo "BASE_URL=${{ needs.deploy-preview.outputs.deploy-url }}"
+
       - name: Create .env file
         run: |
           touch .env
@@ -94,7 +107,7 @@ jobs:
           echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
           echo "BASE_URL=${{ needs.deploy-preview.outputs.deploy-url }}" >> .env
 
-      - name: Verify .env before build
+      - name: Verify .env before tests
         run: ls -la && cat .env
 
       - name: Run Jest tests

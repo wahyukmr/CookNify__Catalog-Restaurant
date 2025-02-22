@@ -51,23 +51,23 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      - name: Construct deploy URL with HTTPS
-        id: construct-url
-        run: |
-          DEPLOY_URL="${{ steps.netlify.outputs.deploy-url }}"
-          if [[ $DEPLOY_URL != http* ]]; then
-            DEPLOY_URL="https://$DEPLOY_URL"
-          fi
-          echo "deploy-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+      # - name: Construct deploy URL with HTTPS
+      #   id: construct-url
+      #   run: |
+      #     DEPLOY_URL="${{ steps.netlify.outputs.deploy-url }}"
+      #     if [[ $DEPLOY_URL != http* ]]; then
+      #       DEPLOY_URL="https://$DEPLOY_URL"
+      #     fi
+      #     echo "deploy-url=$DEPLOY_URL" >> $GITHUB_OUTPUT
 
-      - name: Verify deploy-url
-        run: echo "DEPLOY_URL=${{ steps.construct-url.outputs.deploy-url }}"
+      # - name: Verify deploy-url
+      #   run: echo "DEPLOY_URL=${{ steps.construct-url.outputs.deploy-url }}"
 
-      - name: Update .env with BASE_URL
-        run: echo "BASE_URL=${{ steps.construct-url.outputs.deploy-url }}" >> .env
+      # - name: Update .env with BASE_URL
+      #   run: echo "BASE_URL=${{ steps.construct-url.outputs.deploy-url }}" >> .env
 
-      - name: Verify .env after update
-        run: ls -la && cat .env
+      # - name: Verify .env after update
+      #   run: ls -la && cat .env
 
       - name: Post Comment with Preview Link
         uses: thollander/actions-comment-pull-request@v3

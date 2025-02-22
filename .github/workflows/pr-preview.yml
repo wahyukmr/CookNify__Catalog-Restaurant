@@ -51,6 +51,7 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
+      # Pastikan URL memiliki protokol HTTPS
       - name: Construct deploy URL with HTTPS
         id: construct-url
         run: |
@@ -65,6 +66,9 @@ jobs:
 
       - name: Update .env with BASE_URL
         run: echo "BASE_URL=${{ steps.construct-url.outputs.deploy-url }}" >> .env
+
+      - name: Verify .env after update
+        run: ls -la && cat .env
 
       - name: Post Comment with Preview Link
         uses: thollander/actions-comment-pull-request@v3

@@ -97,46 +97,19 @@ jobs:
       - name: Verify .env before build
         run: ls -la && cat .env
 
-  #     - name: Create .env file
-  #       run: |
-  #         touch .env
-  #         echo "BASE_API_URL=${{ secrets.BASE_API_URL }}" >> .env
-  #         echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
-  #         echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
-  #         echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
+      - name: Run Jest tests
+        run: npm test
 
-  #     - name: Verify .env before build
-  #       run: cat .env
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
-  #     - name: Set BASE_URL from Deploy Preview
-  #       run: echo "BASE_URL=$DEPLOY_URL" >> $GITHUB_ENV
-  #       env:
-  #         DEPLOY_URL: ${{ needs.deploy-preview.outputs.deploy-url }}
+      - name: Run Playwright tests
+        run: npx playwright test
 
-  #     - name: Verify BASE_URL
-  #       run: echo "BASE_URL is $BASE_URL"
-
-  #     - name: Run Jest tests
-  #       run: npm test
-
-  #     - name: Install Playwright Browsers
-  #       run: npx playwright install --with-deps
-
-  #     - name: Run Playwright tests
-  #       env:
-  #         BASE_URL: ${{ env.BASE_URL }}
-  #         BASE_API_URL: ${{ secrets.BASE_API_URL }}
-  #         DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-  #         DATABASE_VERSION: ${{ secrets.DATABASE_VERSION }}
-  #         DATABASE_OBJECT_STORE_NAME: ${{ secrets.DATABASE_OBJECT_STORE_NAME }}
-  #       run: |
-  #         echo "Testing URL: $BASE_URL"
-  #         npx playwright test --config=playwright.config.js
-
-  #     - name: Upload Playwright Trace
-  #       uses: actions/upload-artifact@v4
-  #       if: always()
-  #       with:
-  #         name: playwright-trace
-  #         path: test-results/
-  #         retention-days: 30
+      - name: Upload Playwright Trace
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-trace
+          path: test-results/
+          retention-days: 30

@@ -51,7 +51,6 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
-      # Pastikan URL memiliki protokol HTTPS
       - name: Construct deploy URL with HTTPS
         id: construct-url
         run: |

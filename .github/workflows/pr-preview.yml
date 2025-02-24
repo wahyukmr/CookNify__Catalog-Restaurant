@@ -115,13 +115,13 @@ jobs:
         run: cat .env
 
       - name: Run Jest tests
-        run: npm test
+        run: npm run test
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npm run e2e
 
       - name: Upload Playwright Trace
         uses: actions/upload-artifact@v4

@@ -27,17 +27,6 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Create .env file
-        run: |
-          touch .env
-          echo "BASE_API_URL=${{ secrets.BASE_API_URL }}" >> .env
-          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
-          echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
-          echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
-
-      - name: Verify .env before build
-        run: cat .env
-
       - name: Build Project
         run: npm run build
 
@@ -52,8 +41,7 @@ jobs:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
 
       - name: Debug Netlify Output
-        run: |
-          echo "Raw Deploy URL: ${{ steps.netlify.outputs.deploy-url }}"
+        run: echo "Raw Deploy URL: ${{ steps.netlify.outputs.deploy-url }}"
 
       - name: Construct deploy URL with HTTPS
         id: construct-url
@@ -71,10 +59,14 @@ jobs:
       - name: Verify deploy-url
         run: echo "DEPLOY_URL=${{ steps.construct-url.outputs.deploy-url }}"
 
-      - name: Post Comment with Preview Link
-        uses: thollander/actions-comment-pull-request@v3
+      - name: Save deploy-url to a file
+        run: echo "${{ steps.construct-url.outputs.deploy-url }}" > deploy_url.txt
+
+      - name: Upload deploy-url as artifact
+        uses: actions/upload-artifact@v4
         with:
-          message: 'PR Preview deployed: ${{ steps.construct-url.outputs.deploy-url }}'
+          name: deploy-url
+          path: deploy_url.txt
 
   testing:
     runs-on: ubuntu-latest
@@ -90,21 +82,23 @@ jobs:
           node-version: lts/*
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Download deploy-url artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: deploy-url
 
-      # Menunggu 10 detik agar output dari deploy-preview benar-benar tersedia
-      - name: Wait for deploy-url to propagate
-        run: sleep 10
-
-      - name: Validate deploy-url before using
+      - name: Read deploy-url from file
+        id: get-deploy-url
         run: |
-          if [[ -z "${{ needs.deploy-preview.outputs.deploy-url }}" ]]; then
+          DEPLOY_URL=$(cat deploy_url.txt)
+          if [[ -z "$DEPLOY_URL" ]]; then
             echo "🚨 Error: BASE_URL is empty!"
             exit 1
-          else
-            echo "✅ BASE_URL is available: ${{ needs.deploy-preview.outputs.deploy-url }}"
           fi
+          echo "BASE_URL=$DEPLOY_URL" >> $GITHUB_ENV
+
+      - name: Validate BASE_URL before using
+        run: echo "✅ BASE_URL is available: $BASE_URL"
 
       - name: Create .env file
         run: |
@@ -113,7 +107,7 @@ jobs:
           echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
           echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
           echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
-          echo "BASE_URL=${{ needs.deploy-preview.outputs.deploy-url }}" >> .env
+          echo "BASE_URL=$BASE_URL" >> .env
 
       - name: Verify .env before tests
         run: cat .env

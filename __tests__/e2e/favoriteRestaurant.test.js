@@ -120,5 +120,14 @@ baseTest.describe('Favorite Restaurant Flow', () => {
         'This restaurant is favorited',
       );
     });
+
+    test.afterEach(async ({ page, getFirstRestaurantId }) => {
+      await navigateToRestaurantDetail(page, getFirstRestaurantId);
+
+      await toggleDetailFavoriteButton(page);
+
+      await page.waitForSelector('.notyf__message', { state: 'visible' });
+      await page.waitForSelector('.notyf__message', { state: 'hidden' });
+    });
   });
 });

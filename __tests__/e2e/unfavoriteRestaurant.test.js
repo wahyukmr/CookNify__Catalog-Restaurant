@@ -1,122 +1,142 @@
-import { test as baseTest, expect } from '@playwright/test';
-import { navigateFromHeroToRestoList, toggleDetailFavoriteButton } from '../helpers';
+import { test } from '../fixtures/restaurantFixture';
+import { expect } from '@playwright/test';
+import { toggleDetailFavoriteButton } from '../helpers';
 
-import { test } from '../fixtures/favoriteRestaurantFixture';
-import { navigateToRestaurantDetail } from '../helpers/pageNavigation';
+test.describe('Unfavorite Restaurant Flow', () => {
+  test('Should display the favorite restaurant item in the favorite page', async ({
+    page,
+    isMobile,
+    unfavoriteRestaurant,
+  }) => {
+    const { firstRestaurant } = unfavoriteRestaurant;
 
-baseTest.describe('Favorite Restaurant Flow', () => {
-  baseTest.describe('without fixtures', () => {
-    baseTest(
-      'Should navigate from Hero Section to Resto List Page when clicking Hero Section CTA',
-      async ({ page }) => {
-        await navigateFromHeroToRestoList(page);
-      },
+    if (isMobile) {
+      const buttonOpenNavMenu = page.locator('header-component navigation-menu #btnOpen');
+      if (await buttonOpenNavMenu.isVisible()) {
+        await buttonOpenNavMenu.click();
+      }
+    }
+
+    const favoriteNavButton = page.locator('a[href="#/favorite"]');
+    await expect(favoriteNavButton).toBeVisible();
+    await favoriteNavButton.click();
+
+    await expect(page).toHaveURL(/#\/favorite/);
+
+    const containerElement = page.locator(
+      'favorite-page list-restaurant-container #listItemContainer',
     );
+    await expect(containerElement).toBeVisible();
+
+    await containerElement.scrollIntoViewIfNeeded();
+
+    await expect(
+      containerElement.locator(`list-restaurant-items[data-id="${firstRestaurant.id}"]`),
+    ).toBeVisible();
+    await expect(
+      containerElement.locator(`list-restaurant-items[data-id="${firstRestaurant.id}"] .sr-only`),
+    ).toHaveText('This restaurant is favorited');
   });
 
-  test.describe('with fixtures', () => {
-    test.beforeEach(async ({ page, getFirstRestaurantId }) => {
-      await navigateToRestaurantDetail(page, getFirstRestaurantId);
+  test('Should display the status favorited of the restaurant icon', async ({
+    page,
+    unfavoriteRestaurant,
+  }) => {
+    const { firstRestaurant } = unfavoriteRestaurant;
 
-      await toggleDetailFavoriteButton(page);
+    const firstItemRestaurant = page.locator(
+      `list-restaurant-items[data-id="${firstRestaurant.id}"]`,
+    );
+    await expect(firstItemRestaurant).toBeVisible();
 
-      await page.waitForSelector('.notyf__message', { state: 'visible' });
-      await page.waitForSelector('.notyf__message', { state: 'hidden' });
+    await firstItemRestaurant.scrollIntoViewIfNeeded();
+
+    const restoStatusIcon = firstItemRestaurant.locator('#restoStatusIcon');
+    await expect(restoStatusIcon).toBeVisible();
+
+    await page.pause();
+    await expect(restoStatusIcon.locator('.sr-only')).toHaveText('This restaurant is favorited');
+  });
+
+  test('Should display actions after the favorite button is clicked', async ({
+    page,
+    unfavoriteRestaurant,
+  }) => {
+    const { firstRestaurant } = unfavoriteRestaurant;
+
+    const firstCardDetailsButton = page.locator(
+      `list-restaurant-items[data-id="${firstRestaurant.id}"] .restaurant-item__actions .anchor`,
+    );
+    await expect(firstCardDetailsButton).toBeVisible();
+    await firstCardDetailsButton.click();
+
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
+      waitUntil: 'domcontentloaded',
     });
 
-    test('Should display restaurant list and navigate to restaurant detail when clicking a restaurant card', async ({
-      page,
-    }) => {
-      await page.goto('/#/resto-list');
+    const detailFavoriteButton = await toggleDetailFavoriteButton(page);
 
-      const itemContainer = page.locator(
-        'resto-list-page list-restaurant-container #listItemContainer',
-      );
-      await expect(itemContainer).toBeVisible();
+    await expect(detailFavoriteButton).toBeDisabled();
 
-      await itemContainer.scrollIntoViewIfNeeded();
+    await page.waitForSelector('.notyf__message', { state: 'visible' });
 
-      const restoItems = itemContainer.locator('list-restaurant-items');
+    const notification = page.locator('.notyf__message');
+    await expect(notification).toHaveCount(1);
+    await expect(notification).toHaveText(
+      'The restaurant has been removed from the favorites list',
+    );
 
-      const restoFirstItem = restoItems.first();
-      await expect(restoFirstItem).toBeVisible();
+    await page.waitForSelector('.notyf__message', {
+      state: 'hidden',
+    });
+    await expect(detailFavoriteButton).toHaveText('Favorite');
+    await expect(detailFavoriteButton).toBeEnabled();
+  });
 
-      const restoLastItem = restoItems.last();
-      await restoLastItem.scrollIntoViewIfNeeded();
-      expect(restoItems.last()).not.toBe(restoLastItem);
+  test('Should display the favorite restaurant item to the favorite list', async ({
+    page,
+    isMobile,
+    unfavoriteRestaurant,
+  }) => {
+    const { firstRestaurant } = unfavoriteRestaurant;
 
-      const restoStatusIcon = restoFirstItem.locator('#restoStatusIcon');
-      await expect(restoStatusIcon).toBeVisible();
-      await expect(restoStatusIcon.locator('.sr-only')).toHaveText('This restaurant is favorited');
+    const firstCardDetailsButton = page.locator(
+      `list-restaurant-items[data-id="${firstRestaurant.id}"] .restaurant-item__actions .anchor`,
+    );
+    await expect(firstCardDetailsButton).toBeVisible();
+    await firstCardDetailsButton.click();
 
-      const firstCardDetailsButton = restoFirstItem.locator('.restaurant-item__actions .anchor');
-      await expect(firstCardDetailsButton).toBeVisible();
-      await firstCardDetailsButton.click();
-
-      const restaurantDetailRegex = new RegExp('#/resto-list/detail/\\w+');
-      await expect(page).toHaveURL(restaurantDetailRegex);
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
+      waitUntil: 'domcontentloaded',
     });
 
-    test('Should add a restaurant to favorites and show success notification', async ({
-      page,
-      getFirstRestaurantId,
-    }) => {
-      await navigateToRestaurantDetail(page, getFirstRestaurantId);
+    await toggleDetailFavoriteButton(page);
 
-      const detailFavoriteButton = await toggleDetailFavoriteButton(page);
+    await page.waitForSelector('.notyf__message', { state: 'visible' });
+    await page.waitForSelector('.notyf__message', { state: 'hidden' });
 
-      await expect(detailFavoriteButton).toBeDisabled();
-
-      await page.waitForSelector('.notyf__message', { state: 'visible' });
-
-      const notification = page.locator('.notyf__message').last();
-      await expect(notification).toHaveCount(1);
-      await expect(notification).toHaveText(
-        'The restaurant has been removed from the favorites list',
-      );
-
-      await page.waitForSelector('.notyf__message', {
-        state: 'hidden',
-      });
-      await expect(detailFavoriteButton).toHaveText('Favorite');
-      await expect(detailFavoriteButton).toBeEnabled();
-    });
-
-    test('Should display favorited restaurant in the favorite list', async ({
-      page,
-      isMobile,
-      getFirstRestaurantId,
-    }) => {
-      await navigateToRestaurantDetail(page, getFirstRestaurantId);
-
-      await toggleDetailFavoriteButton(page);
-
-      await page.waitForSelector('.notyf__message', { state: 'visible' });
-      await page.waitForSelector('.notyf__message', { state: 'hidden' });
-
-      if (isMobile) {
-        const buttonOpenNavMenu = page.locator('header-component navigation-menu #btnOpen');
-        if (await buttonOpenNavMenu.isVisible()) {
-          await buttonOpenNavMenu.click();
-        }
+    if (isMobile) {
+      const buttonOpenNavMenu = page.locator('header-component navigation-menu #btnOpen');
+      if (await buttonOpenNavMenu.isVisible()) {
+        await buttonOpenNavMenu.click();
       }
+    }
 
-      const favoriteNavButton = page.locator('a[href="#/favorite"]');
-      await expect(favoriteNavButton).toBeVisible();
-      await favoriteNavButton.click();
+    const favoriteNavButton = page.locator('a[href="#/favorite"]');
+    await expect(favoriteNavButton).toBeVisible();
+    await favoriteNavButton.click();
 
-      await expect(page).toHaveURL(/#\/favorite/);
+    await expect(page).toHaveURL(/#\/favorite/);
 
-      const itemContainer = page.locator(
-        'favorite-page list-restaurant-container #listItemContainer',
-      );
-      await expect(itemContainer).toBeVisible();
+    const containerElement = page.locator(
+      'favorite-page list-restaurant-container #listItemContainer',
+    );
+    await expect(containerElement).toBeVisible();
 
-      await itemContainer.scrollIntoViewIfNeeded();
+    await containerElement.scrollIntoViewIfNeeded();
 
-      const message = page.locator('message-section .message__content');
-      await expect(message).toBeVisible();
-      await expect(message).toContainText('No saved list of favorite restaurants');
-    });
+    const message = page.locator('message-section .message__content');
+    await expect(message).toBeVisible();
+    await expect(message).toContainText('No saved list of favorite restaurants');
   });
 });

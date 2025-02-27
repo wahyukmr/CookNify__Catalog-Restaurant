@@ -140,8 +140,8 @@ jobs:
 
       - name: Upload Playwright Trace
         uses: actions/upload-artifact@v4
-        if: always()
+        if: ${{ !cancelled() }}
         with:
-          name: playwright-trace
-          path: test-results/
+          name: playwright-report
+          path: playwright-report/
           retention-days: 30

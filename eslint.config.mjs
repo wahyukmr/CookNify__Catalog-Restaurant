@@ -1,6 +1,6 @@
 import pluginJs from '@eslint/js';
 import dicodingStyle from 'eslint-config-dicodingacademy';
-import prettierConfig from 'eslint-plugin-prettier/recommended';
+import prettierConfig from 'eslint-plugin-prettier/recommended'; // Memastikan bahwa Prettier dan ESLint bekerja sama dengan baik
 import globals from 'globals';
 import jestPlugin from 'eslint-plugin-jest';
 
@@ -21,6 +21,15 @@ export default [
       jest: jestPlugin,
     },
     rules: {
+      'prettier/prettier': [
+        'error',
+        {
+          printWidth: 100,
+          endOfLine: 'lf',
+          tabWidth: 2,
+          singleQuote: true,
+        },
+      ],
       camelcase: ['error', { properties: 'never' }],
       ...jestPlugin.configs.recommended.rules,
     },

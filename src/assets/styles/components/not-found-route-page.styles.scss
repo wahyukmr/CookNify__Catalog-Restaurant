@@ -1,6 +1,6 @@
-@use "../utils/variables" as v;
-@use "../utils/mixins" as m;
-@use "../utils/functions" as f;
+@use '../utils/variables' as v;
+@use '../utils/mixins' as m;
+@use '../utils/functions' as f;
 
 @include m.box-sizing-inherit;
 

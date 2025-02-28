@@ -1,5 +1,5 @@
 import { Workbox } from 'workbox-window';
-import { showWarningNotification } from './notifications';
+import { showErrorNotification, showWarningNotification } from './notifications';
 
 const serviceWorkerRegister = async () => {
   if (!('serviceWorker' in navigator)) {
@@ -11,9 +11,8 @@ const serviceWorkerRegister = async () => {
 
   try {
     await wb.register();
-    console.log('Service worker registered');
   } catch (error) {
-    console.log('Failed to register service worker', error.message);
+    showErrorNotification(`Failed to register service worker: ${error.message}`);
   }
 };
 

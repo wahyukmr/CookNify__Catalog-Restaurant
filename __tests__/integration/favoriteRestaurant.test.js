@@ -17,14 +17,14 @@ jest.mock('../../src/utils', () => ({
 }));
 
 describe('Testing the favorite restaurant feature', () => {
-  let indexedDBService, detailPage, favoriteBtn, model, controller, view;
+  let indexedDBService, detailPage, detailFavoriteBtn, model, controller, view;
 
   beforeEach(async () => {
     indexedDBService = createIndexedDBService();
 
     const domElements = setupDomFavoriteAndUnfavoriteResto();
 
-    favoriteBtn = domElements.favoriteBtn;
+    detailFavoriteBtn = domElements.detailFavoriteBtn;
     detailPage = domElements.detailPage;
 
     model = new RestoDetailModel();
@@ -44,24 +44,38 @@ describe('Testing the favorite restaurant feature', () => {
 
   describe('positive scenarios', () => {
     test('should render the favorite button if the restaurant is not already in favorites', async () => {
-      setupMocks({ isFavorited: false, indexedDBService, detailPage, favoriteBtn, model, view });
+      setupMocks({
+        isFavorited: false,
+        indexedDBService,
+        detailPage,
+        detailFavoriteBtn,
+        model,
+        view,
+      });
 
       await controller.init();
 
-      const textSpan = favoriteBtn.querySelector('span');
+      const textSpan = detailFavoriteBtn.querySelector('span');
       expect(textSpan).not.toBeNull();
       expect(textSpan.textContent).toBe('Favorite');
-      expect(favoriteBtn.getAttribute('aria-pressed')).toBe('false');
-      expect(favoriteBtn.getAttribute('aria-label')).toBe('Mark this restaurant as favorite');
+      expect(detailFavoriteBtn.getAttribute('aria-pressed')).toBe('false');
+      expect(detailFavoriteBtn.getAttribute('aria-label')).toBe('Mark this restaurant as favorite');
     });
 
     test('should add restaurant to favorites when favorite button is clicked', async () => {
-      setupMocks({ isFavorited: false, indexedDBService, detailPage, favoriteBtn, model, view });
+      setupMocks({
+        isFavorited: false,
+        indexedDBService,
+        detailPage,
+        detailFavoriteBtn,
+        model,
+        view,
+      });
       jest.spyOn(indexedDBService, 'put');
 
       await controller.init();
 
-      favoriteBtn.click();
+      detailFavoriteBtn.click();
 
       expect(await indexedDBService.put).toHaveBeenCalledWith(mockRestaurant);
 
@@ -70,12 +84,19 @@ describe('Testing the favorite restaurant feature', () => {
     });
 
     test('should show notify success when a restaurant is added to favorites', async () => {
-      setupMocks({ isFavorited: false, indexedDBService, detailPage, favoriteBtn, model, view });
+      setupMocks({
+        isFavorited: false,
+        indexedDBService,
+        detailPage,
+        detailFavoriteBtn,
+        model,
+        view,
+      });
       jest.spyOn(indexedDBService, 'put').mockResolvedValue(mockRestaurant);
 
       await controller.init();
 
-      favoriteBtn.click();
+      detailFavoriteBtn.click();
 
       await indexedDBService.put;
 
@@ -87,35 +108,46 @@ describe('Testing the favorite restaurant feature', () => {
     });
 
     test('should disable the favorite button while processing favorite button clicked', async () => {
-      setupMocks({ isFavorited: false, indexedDBService, detailPage, favoriteBtn, model, view });
+      setupMocks({
+        isFavorited: false,
+        indexedDBService,
+        detailPage,
+        detailFavoriteBtn,
+        model,
+        view,
+      });
       jest.spyOn(indexedDBService, 'put').mockResolvedValue(mockRestaurant);
 
       await controller.init();
 
-      expect(favoriteBtn.disabled).toBe(false);
+      expect(detailFavoriteBtn.disabled).toBe(false);
 
-      await favoriteBtn.click();
+      await detailFavoriteBtn.click();
 
-      expect(favoriteBtn.disabled).toBe(true);
+      expect(detailFavoriteBtn.disabled).toBe(true);
 
       await Promise.resolve();
 
-      expect(favoriteBtn.disabled).toBe(false);
+      expect(detailFavoriteBtn.disabled).toBe(false);
     });
 
     test('should render the favorite button with the favorite state and proper attributes', () => {
       jest.spyOn(domService, 'setAttribute');
 
-      view.renderFavoriteButton(favoriteBtn, false);
+      view.renderFavoriteButton(detailFavoriteBtn, false);
 
       // Pastikan elemen <span> dibuat
-      const textSpan = favoriteBtn.querySelector('span');
+      const textSpan = detailFavoriteBtn.querySelector('span');
       expect(textSpan).not.toBeNull();
 
       // Periksa atribut yang di-set dengan domService
-      expect(domService.setAttribute).toHaveBeenCalledWith(favoriteBtn, 'aria-pressed', 'false');
       expect(domService.setAttribute).toHaveBeenCalledWith(
-        favoriteBtn,
+        detailFavoriteBtn,
+        'aria-pressed',
+        'false',
+      );
+      expect(domService.setAttribute).toHaveBeenCalledWith(
+        detailFavoriteBtn,
         'aria-label',
         'Mark this restaurant as favorite',
       );
@@ -127,26 +159,40 @@ describe('Testing the favorite restaurant feature', () => {
 
   describe('negative scenarios', () => {
     test('should not render the unfavorite button if the restaurant is not already in favorites', async () => {
-      setupMocks({ isFavorited: false, indexedDBService, detailPage, favoriteBtn, model, view });
+      setupMocks({
+        isFavorited: false,
+        indexedDBService,
+        detailPage,
+        detailFavoriteBtn,
+        model,
+        view,
+      });
 
       await controller.init();
 
-      const textSpan = favoriteBtn.querySelector('span');
+      const textSpan = detailFavoriteBtn.querySelector('span');
       expect(textSpan).not.toBeNull();
       expect(textSpan.textContent).not.toBe('Unfavorite');
-      expect(favoriteBtn.getAttribute('aria-pressed')).not.toBe('true');
-      expect(favoriteBtn.getAttribute('aria-label')).not.toBe('Unfavorite this restaurant');
+      expect(detailFavoriteBtn.getAttribute('aria-pressed')).not.toBe('true');
+      expect(detailFavoriteBtn.getAttribute('aria-label')).not.toBe('Unfavorite this restaurant');
     });
 
     test('should show correct error message when a restaurant is added to favorites', async () => {
       const errorMessage = 'Specific error occurred';
 
-      setupMocks({ isFavorited: false, indexedDBService, detailPage, favoriteBtn, model, view });
+      setupMocks({
+        isFavorited: false,
+        indexedDBService,
+        detailPage,
+        detailFavoriteBtn,
+        model,
+        view,
+      });
       jest.spyOn(indexedDBService, 'put').mockRejectedValue(new Error(errorMessage));
 
       await controller.init();
 
-      favoriteBtn.click();
+      detailFavoriteBtn.click();
 
       await indexedDBService.put;
 
@@ -156,12 +202,19 @@ describe('Testing the favorite restaurant feature', () => {
     });
 
     test('should show a default error message if error has no message when adding a restaurant to favorites', async () => {
-      setupMocks({ isFavorited: false, indexedDBService, detailPage, favoriteBtn, model, view });
+      setupMocks({
+        isFavorited: false,
+        indexedDBService,
+        detailPage,
+        detailFavoriteBtn,
+        model,
+        view,
+      });
       jest.spyOn(indexedDBService, 'put').mockRejectedValue(new Error());
 
       await controller.init();
 
-      favoriteBtn.click();
+      detailFavoriteBtn.click();
 
       await indexedDBService.put;
 

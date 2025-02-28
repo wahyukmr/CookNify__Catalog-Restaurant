@@ -30,9 +30,10 @@ export default class RestoDetailController {
           this._detailItemContainer,
         );
 
-        const { favoriteBtn, categories, menus, review } = this._restoDetailView.getElements();
+        const { detailFavoriteBtn, categories, menus, review } =
+          this._restoDetailView.getElements();
 
-        this._restoDetailView.renderFavoriteButton(favoriteBtn, !!isFavorited);
+        this._restoDetailView.renderFavoriteButton(detailFavoriteBtn, !!isFavorited);
         this._restoDetailView.renderCategories(categories, dataRestaurant.categories);
         this._restoDetailView.renderMenus(menus, dataRestaurant.menus);
         this._restoDetailView.renderCustomerReview(review, dataRestaurant.customerReviews);
@@ -48,10 +49,10 @@ export default class RestoDetailController {
   }
 
   async _handleClickFavoriteButton(dataResto) {
-    const favoriteBtn = this._restoDetailView.getElements().favoriteBtn;
+    const detailFavoriteBtn = this._restoDetailView.getElements().detailFavoriteBtn;
 
     try {
-      favoriteBtn.disabled = true;
+      detailFavoriteBtn.disabled = true;
 
       const isFavorited = await this._favoriteRestaurantIdb.get(this._restoDetailId);
 
@@ -65,13 +66,13 @@ export default class RestoDetailController {
         await delay(3000);
       }
 
-      this._restoDetailView.renderFavoriteButton(favoriteBtn, !isFavorited);
+      this._restoDetailView.renderFavoriteButton(detailFavoriteBtn, !isFavorited);
     } catch (error) {
       showErrorNotification(
         error.message || 'An error occurred while handling the favorite button',
       );
     } finally {
-      favoriteBtn.disabled = false;
+      detailFavoriteBtn.disabled = false;
     }
   }
 

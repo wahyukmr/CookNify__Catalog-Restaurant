@@ -21,7 +21,7 @@ export const setupDomFavoriteAndUnfavoriteResto = () => {
     detailPage: restoDetailPage.shadowRoot
       .querySelector('#restaurantDetailContainer')
       .querySelector('mock-list-restaurant-item-detail'),
-    favoriteBtn: restoDetailPage.shadowRoot
+    detailFavoriteBtn: restoDetailPage.shadowRoot
       .querySelector('#restaurantDetailContainer')
       .querySelector('mock-list-restaurant-item-detail')
       .shadowRoot.querySelector('#detailFavoriteBtn'),

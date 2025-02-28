@@ -13,7 +13,6 @@ class HeroSection extends HTMLElement {
     this._shadowRoot = this.attachShadow({ mode: 'open' });
     this._style = document.createElement('style');
     this.render();
-    this._onCtaButtonClick = this._onCtaButtonClick.bind(this);
   }
 
   get webpSrcset() {
@@ -39,15 +38,7 @@ class HeroSection extends HTMLElement {
   }
 
   connectedCallback() {
-    this._shadowRoot.querySelector('#heroCtaBtn').addEventListener('click', this._onCtaButtonClick);
-
     lazysizesForShadowDom(this._shadowRoot, '.hero__image-container');
-  }
-
-  disconnectedCallback() {
-    this._shadowRoot
-      .querySelector('#heroCtaBtn')
-      .removeEventListener('click', this._onCtaButtonClick);
   }
 
   render() {
@@ -92,10 +83,6 @@ class HeroSection extends HTMLElement {
         </div>
       </section>
     `;
-  }
-
-  _onCtaButtonClick() {
-    this.dispatchEvent(new CustomEvent('heroCtaBtnClick'));
   }
 }
 

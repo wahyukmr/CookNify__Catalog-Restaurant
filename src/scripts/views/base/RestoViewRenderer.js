@@ -46,6 +46,7 @@ export default class RestoViewRenderer {
 
   _createRestaurantItem(dataRestaurant, targetElement) {
     const restoItem = document.createElement(targetElement);
+    restoItem.dataset.id = dataRestaurant.id;
     restoItem.dataRestaurant = dataRestaurant;
     return restoItem;
   }

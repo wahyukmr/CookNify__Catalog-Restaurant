@@ -20,7 +20,7 @@ export default class RestoListController {
     } catch (error) {
       showErrorNotification(`${error.message}`);
       this._restoListView.renderFallback('Unable to find any restaurants.');
-      this._restoListView.updateButtonsState();
+      this._restoListView.buttonsStateUpdate();
     }
   }
 

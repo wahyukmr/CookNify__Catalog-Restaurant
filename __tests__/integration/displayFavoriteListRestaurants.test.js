@@ -22,7 +22,7 @@ const mockBatchLoader = {
 
 const mockItemNavigation = {
   initialize: jest.fn(),
-  updateButtonsState: jest.fn(),
+  buttonsStateUpdate: jest.fn(),
 };
 
 describe('should display a list of favorite restaurants', () => {
@@ -45,12 +45,12 @@ describe('should display a list of favorite restaurants', () => {
     mockBatchLoader.initialize();
     controller = new RestoFavoriteController({ model, view });
 
-    view.initializeEvents();
+    view.initializeRestoListEvents();
 
     jest.spyOn(view, 'renderFallback');
     jest.spyOn(view, 'renderLoader');
     jest.spyOn(view, 'renderRestaurantItems');
-    jest.spyOn(view, 'updateButtonsState');
+    jest.spyOn(view, 'buttonsStateUpdate');
   });
 
   afterEach(async () => {
@@ -72,7 +72,7 @@ describe('should display a list of favorite restaurants', () => {
     expect(mockRenderer.clearContainer).toHaveBeenCalled();
     expect(mockBatchLoader.setRestaurants).toHaveBeenCalledWith(mockRestaurants);
     expect(mockBatchLoader.renderInitialBatch).toHaveBeenCalled();
-    expect(view.updateButtonsState).toHaveBeenCalled();
+    expect(view.buttonsStateUpdate).toHaveBeenCalled();
   });
 
   test('should render fallback message if no favorite restaurants', async () => {

@@ -33,6 +33,7 @@ jobs:
           elif [[ "${{ github.ref_name }}" == "dev" ]]; then
             echo "ENVIRONMENT=staging" >> $GITHUB_ENV
             echo "DEPLOY_PRODUCTION=false" >> $GITHUB_ENV
+          fi
 
       - name: Create .env file
         run: |

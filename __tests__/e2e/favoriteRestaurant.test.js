@@ -67,9 +67,10 @@ test.describe('Favorite Restaurant Flow', () => {
     await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
       waitUntil: 'domcontentloaded',
     });
+    await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
-    await listRestaurantItemDetail.waitFor({ state: 'visible', timeout: 60000 });
+    await listRestaurantItemDetail.waitFor();
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
 
@@ -108,9 +109,10 @@ test.describe('Favorite Restaurant Flow', () => {
     await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
       waitUntil: 'domcontentloaded',
     });
+    await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
-    await listRestaurantItemDetail.waitFor({ state: 'visible', timeout: 60000 });
+    await listRestaurantItemDetail.waitFor();
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
 

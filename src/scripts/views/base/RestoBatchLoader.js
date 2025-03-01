@@ -3,26 +3,38 @@ import { showErrorNotification } from '../../../utils';
 export default class RestoBatchLoader {
   constructor(renderer) {
     this._renderer = renderer;
-
     this.restaurants = [];
   }
 
   initialize() {
-    this.updateViewportSize();
-    this.indexOfClickingBtn = 0;
     this.cardWidth = 300;
-    this.newIndex = 0;
+
+    this.updateViewportSize();
+
+    this.numberOfItemsRendered = 0;
+    this.remainingItemsToTheLastItem = 0;
+    this.indexItemByClickingBtn = 0;
     this.scrollByButton = false;
-    this.currentScrollDistanceLeft = 0;
-    this.currentIndexItem = 0;
+    this.scrollDistanceToLastItemInView = 0;
 
     this._observer = this._createIntersectionObserver();
   }
 
   updateViewportSize() {
-    this._viewportWidth = this._renderer.elements.listRestaurantContainer?.offsetWidth || 0;
-    this.itemsInView = Math.round(this._viewportWidth / this.cardWidth);
-    this.indexOfScrollingView = this.itemsInView;
+    requestAnimationFrame(() => {
+      const container = this._renderer.elements.listRestaurantContainer;
+      if (container) {
+        this._viewportWidth = container.offsetWidth || container.getBoundingClientRect().width;
+
+        if (this._viewportWidth === 0) {
+          showErrorNotification('Container width has not been obtained.');
+        }
+
+        this.itemsInView = Math.round(this._viewportWidth / this.cardWidth);
+        this.itemsRenderedInView = Math.ceil(this._viewportWidth / this.cardWidth);
+        this.indexItemByScrolled = this.itemsInView;
+      }
+    });
   }
 
   setRestaurants(restaurants) {
@@ -30,7 +42,6 @@ export default class RestoBatchLoader {
   }
 
   renderInitialBatch() {
-    this.indexOfClickingBtn = 0;
     const initialBatch = this.restaurants.slice(0, this.itemsInView);
     this._renderBatch(initialBatch);
     if (this.itemsInView < this.restaurants.length) {
@@ -45,37 +56,41 @@ export default class RestoBatchLoader {
   }
 
   nextBatch() {
-    this.indexOfClickingBtn = Math.min(
-      this.indexOfClickingBtn + this.itemsInView,
+    this.indexItemByClickingBtn = Math.min(
+      this.indexItemByClickingBtn + this.itemsInView,
       this.restaurants.length - (this.restaurants.length % this.itemsInView),
     );
-    this.currentScrollDistanceLeft =
+    this.scrollDistanceToLastItemInView =
       this._renderer.elements.listItemContainer.scrollLeft +
-      this.cardWidth * (this.itemsInView - this.newIndex);
-    this.newIndex = 0;
+      this.cardWidth * (this.itemsInView - this.remainingItemsToTheLastItem);
+    this.scrollByButton = this.remainingItemsToTheLastItem !== 0 ? false : true;
+    this.remainingItemsToTheLastItem = 0;
   }
 
   prevBatch() {
     const lastBatchIndex = Math.min(
-      this.restaurants.length - this.indexOfClickingBtn,
+      this.restaurants.length - this.indexItemByClickingBtn,
       this.itemsInView,
     );
-    this.indexOfClickingBtn = Math.max(this.indexOfClickingBtn - this.itemsInView, 0);
-    this.currentScrollDistanceLeft =
+    this.indexItemByClickingBtn = Math.max(this.indexItemByClickingBtn - this.itemsInView, 0);
+    this.scrollDistanceToLastItemInView =
       this._renderer.elements.listItemContainer.scrollLeft - this.cardWidth * lastBatchIndex;
-    this.newIndex = 0;
+    this.remainingItemsToTheLastItem = 0;
     this.scrollByButton = false;
   }
 
   canNavigateLeft() {
-    return (this.indexOfClickingBtn > 0 && this.currentIndexItem > 0) || this.currentIndexItem > 0;
+    return (
+      (this.indexItemByClickingBtn > 0 && this.numberOfItemsRendered > 0) ||
+      this.numberOfItemsRendered > 0
+    );
   }
 
   canNavigateRight() {
     return (
-      (this.indexOfClickingBtn + this.itemsInView < this.restaurants.length &&
-        this.currentIndexItem + this.itemsInView < this.restaurants.length) ||
-      this.currentIndexItem + this.itemsInView < this.restaurants.length
+      (this.indexItemByClickingBtn + this.itemsInView < this.restaurants.length &&
+        this.numberOfItemsRendered + this.itemsInView < this.restaurants.length) ||
+      this.numberOfItemsRendered + this.itemsInView < this.restaurants.length
     );
   }
 
@@ -102,41 +117,48 @@ export default class RestoBatchLoader {
 
   _handleIntersection() {
     if (this.scrollByButton) {
-      this.scrollByButton = false;
       const nextBatch = this.restaurants.slice(
-        this.indexOfClickingBtn,
-        this.indexOfClickingBtn + this.itemsInView,
+        this.indexItemByClickingBtn,
+        this.indexItemByClickingBtn + this.itemsInView,
       );
       this._renderBatch(nextBatch);
-      this._renderer.elements.listItemContainer.scrollTo({
-        left: this.currentScrollDistanceLeft,
-        behavior: 'smooth',
+
+      requestAnimationFrame(() => {
+        this._renderer.elements.listItemContainer.scrollTo({
+          left: this.scrollDistanceToLastItemInView,
+          behavior: 'smooth',
+        });
       });
+
       if (
-        this.indexOfClickingBtn + this.itemsInView <= this.restaurants.length &&
-        this.indexOfScrollingView < this.restaurants.length
+        this.indexItemByClickingBtn + this.itemsInView <= this.restaurants.length &&
+        this.indexItemByScrolled < this.restaurants.length
       ) {
         this._appendSentinel();
       }
-      this.indexOfScrollingView = Math.min(
-        this.indexOfScrollingView + this.itemsInView,
+
+      this.indexItemByScrolled = Math.min(
+        this.indexItemByScrolled + this.itemsInView,
         this.restaurants.length,
       );
+
+      this.scrollByButton = false;
     } else {
       const nextBatch = this.restaurants.slice(
-        this.indexOfScrollingView,
-        this.indexOfScrollingView + this.itemsInView,
+        this.indexItemByScrolled,
+        this.indexItemByScrolled + this.itemsInView,
       );
       this._renderBatch(nextBatch);
-      if (this.indexOfScrollingView + this.itemsInView <= this.restaurants.length) {
+      if (this.indexItemByScrolled + this.itemsInView <= this.restaurants.length) {
         this._appendSentinel();
       }
-      this.indexOfClickingBtn = Math.min(
-        this.indexOfScrollingView - this.itemsInView,
+
+      this.indexItemByClickingBtn = Math.min(
+        this.indexItemByScrolled - this.itemsInView,
         this.restaurants.length - (this.restaurants.length % this.itemsInView),
       );
-      this.indexOfScrollingView = Math.min(
-        this.indexOfScrollingView + this.itemsInView,
+      this.indexItemByScrolled = Math.min(
+        this.indexItemByScrolled + this.itemsInView,
         this.restaurants.length,
       );
     }

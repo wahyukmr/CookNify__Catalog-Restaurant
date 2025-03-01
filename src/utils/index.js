@@ -1,4 +1,5 @@
 import { clearContent } from './clearContent';
+import { debounce } from './debounce';
 import { delay } from './delay';
 import { lazysizesForShadowDom } from './lazysizesForShadowDom';
 import {
@@ -9,6 +10,7 @@ import {
 import serviceWorkerRegister from './service-worker-register';
 
 export {
+  debounce,
   serviceWorkerRegister,
   clearContent,
   showWarningNotification,

@@ -21,10 +21,6 @@
   z-index: v.$z-index-header;
   transition: box-shadow 0.3s ease;
 
-  &.scrolled {
-    box-shadow: 0 -1px 20px 0 rgba(250, 250, 250, 0.3);
-  }
-
   &::before {
     content: '';
     position: absolute;
@@ -32,9 +28,19 @@
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: v.$z-index-overlay;
     backdrop-filter: blur(6px) saturate(105%);
-    -webkit-backdrop-filter: blur(6px);
-    z-index: v.$z-index-overlay;;
+    -webkit-backdrop-filter: blur(6px) saturate(105%);
+    will-change: backdrop-filter;
+
+    /* Hanya terapkan backdrop-filter jika browser mendukung */
+    @supports (-webkit-backdrop-filter: blur(6px)) {
+      background-color: v.$bg-100;
+    }
+  }
+
+  &.scrolled {
+    box-shadow: 0 -1px 20px 0 rgba(250, 250, 250, 0.3);
   }
 
   @include m.breakpoint(small, min-width) {

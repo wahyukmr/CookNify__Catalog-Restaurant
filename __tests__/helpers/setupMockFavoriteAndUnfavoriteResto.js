@@ -5,14 +5,14 @@ export const setupMockFavoriteAndUnfavoriteResto = ({
   indexedDBService,
   model,
   view,
-  favoriteBtn,
+  detailFavoriteBtn,
   detailPage,
 }) => {
   jest.spyOn(indexedDBService, 'get').mockResolvedValue(isFavorited ? mockRestaurant.id : null);
   jest.spyOn(model, 'getRestaurantByID').mockResolvedValue(mockRestaurant);
 
   view.renderLoader = jest.fn();
-  view.getElements = jest.fn().mockReturnValue({ favoriteBtn });
+  view.getElements = jest.fn().mockReturnValue({ detailFavoriteBtn });
   view.renderRestaurantItemDetails = jest
     .fn()
     .mockImplementation(() => (detailPage.dataRestaurant = mockRestaurant));

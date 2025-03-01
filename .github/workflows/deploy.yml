@@ -25,16 +25,6 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Set Environment Variables
-        run: |
-          if [[ "${{ github.ref_name }}" == "main" ]]; then
-            echo "ENVIRONMENT=production" >> $GITHUB_ENV
-            echo "DEPLOY_PRODUCTION=true" >> $GITHUB_ENV
-          elif [[ "${{ github.ref_name }}" == "dev" ]]; then
-            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
-            echo "DEPLOY_PRODUCTION=false" >> $GITHUB_ENV
-          fi
-
       - name: Create .env file
         run: |
           touch .env
@@ -49,34 +39,17 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      - name: Deploy to Netlify (Staging or Production)
+      - name: Deploy to Netlify (Staging Only)
         id: netlify-deploy
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './dist'
-          production-deploy: ${{ env.DEPLOY_PRODUCTION }}
-          deploy-message: '🚀 Auto Deployment for ${{ env.ENVIRONMENT }} - ${{ github.sha }}'
-          github-deployment-environment: ${{ env.ENVIRONMENT }}
+          production-deploy: false
+          deploy-message: '🚀 Auto Deployment for Staging - ${{ github.sha }}'
+          github-deployment-environment: staging
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-
-      - name: Set GitHub Deployment Status
-        if: success()
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.rest.repos.createDeployment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: context.sha,
-              required_contexts: [],
-              environment: process.env.ENVIRONMENT,
-              transient_environment: process.env.ENVIRONMENT !== 'production',
-              auto_merge: false,
-              description: "🚀 Successfully deployed to " + process.env.ENVIRONMENT
-            });
 
       - name: Debug Netlify Output URL
         run: |
@@ -154,9 +127,6 @@ jobs:
       - name: Verify .env before tests
         run: cat .env
 
-      - name: Check Jest Installation
-        run: npx jest --version || echo "Jest is not installed!"
-
       - name: Run Jest tests
         run: npm run test
 
@@ -173,3 +143,69 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: testing
+    if: github.ref_name == 'main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: |
+          touch .env
+          echo "BASE_API_URL=${{ secrets.BASE_API_URL }}" >> .env
+          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env
+          echo "DATABASE_VERSION=${{ secrets.DATABASE_VERSION }}" >> .env
+          echo "DATABASE_OBJECT_STORE_NAME=${{ secrets.DATABASE_OBJECT_STORE_NAME }}" >> .env
+
+      - name: Build Project
+        run: npm run build
+
+      - name: Deploy to Netlify (Production)
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './dist'
+          production-deploy: true
+          deploy-message: '🚀 Auto Deployment for Production - ${{ github.sha }}'
+          github-deployment-environment: production
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Set GitHub Deployment Status
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+              required_contexts: [],
+              environment: production,
+              transient_environment: false,
+              auto_merge: false,
+              description: "🚀 Successfully deployed to production"
+            });
+
+      - name: Check if production URL is accessible
+        run: |
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" https://cooknify.netlify.app)
+          if [ "$STATUS_CODE" -ne 200 ]; then
+            echo "Production site is down! Status code: $STATUS_CODE"
+            exit 1
+          fi
+          echo "Production site is up with status code: $STATUS_CODE"

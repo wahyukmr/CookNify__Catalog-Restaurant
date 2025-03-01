@@ -1,6 +1,5 @@
 import { test } from '../fixtures/restaurantFixture';
 import { expect } from '@playwright/test';
-import { toggleDetailFavoriteButton } from '../helpers';
 
 test.describe('Favorite Restaurant Flow', () => {
   test('Should display a fallback message of no favorite restaurant', async ({
@@ -69,7 +68,14 @@ test.describe('Favorite Restaurant Flow', () => {
       waitUntil: 'domcontentloaded',
     });
 
-    const detailFavoriteButton = await toggleDetailFavoriteButton(page);
+    const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
+    await listRestaurantItemDetail.waitFor({ state: 'visible', timeout: 60000 });
+
+    const detailFavoriteButton = page.locator('#detailFavoriteBtn');
+
+    await detailFavoriteButton.scrollIntoViewIfNeeded();
+
+    await detailFavoriteButton.click();
 
     await expect(detailFavoriteButton).toBeDisabled();
 
@@ -103,7 +109,14 @@ test.describe('Favorite Restaurant Flow', () => {
       waitUntil: 'domcontentloaded',
     });
 
-    await toggleDetailFavoriteButton(page);
+    const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
+    await listRestaurantItemDetail.waitFor({ state: 'visible', timeout: 60000 });
+
+    const detailFavoriteButton = page.locator('#detailFavoriteBtn');
+
+    await detailFavoriteButton.scrollIntoViewIfNeeded();
+
+    await detailFavoriteButton.click();
 
     await page.waitForSelector('.notyf__message', { state: 'visible' });
     await page.waitForSelector('.notyf__message', { state: 'hidden' });

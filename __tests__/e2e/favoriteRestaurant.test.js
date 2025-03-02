@@ -1,5 +1,5 @@
-import { test } from '../fixtures/restaurantFixture';
 import { expect } from '@playwright/test';
+import { test } from '../fixtures/restaurantFixture';
 
 test.describe('Favorite Restaurant Flow', () => {
   test('Should display a fallback message of no favorite restaurant', async ({
@@ -69,11 +69,9 @@ test.describe('Favorite Restaurant Flow', () => {
     });
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
-    const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
-    await listRestaurantItemDetail.waitFor();
+    const detailFavoriteButton = page.locator('list-restaurant-item-detail #detailFavoriteBtn');
 
-    const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-
+    await expect(detailFavoriteButton).toBeVisible();
     await detailFavoriteButton.scrollIntoViewIfNeeded();
 
     await detailFavoriteButton.click();
@@ -111,11 +109,9 @@ test.describe('Favorite Restaurant Flow', () => {
     });
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
-    const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
-    await listRestaurantItemDetail.waitFor();
+    const detailFavoriteButton = page.locator('list-restaurant-item-detail #detailFavoriteBtn');
 
-    const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-
+    await expect(detailFavoriteButton).toBeVisible();
     await detailFavoriteButton.scrollIntoViewIfNeeded();
 
     await detailFavoriteButton.click();

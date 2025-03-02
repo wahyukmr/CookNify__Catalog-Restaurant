@@ -5,9 +5,9 @@ import { setupMockFavoriteAndUnfavoriteResto } from './setupMockFavoriteAndUnfav
 import { itActsAsFavoriteRestaurantModel } from './testFactories';
 
 export {
-  navigateFromHeroToRestoList,
   createIndexedDBService,
   itActsAsFavoriteRestaurantModel,
+  navigateFromHeroToRestoList,
   setupDomFavoriteAndUnfavoriteResto,
   setupMockFavoriteAndUnfavoriteResto,
 };

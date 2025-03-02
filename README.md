@@ -1,4 +1,25 @@
-## OVERVIEW
+<details open="open">
+<summary>Table of Contents</summary>
+
+- [Overview](#overview)
+  - [Project Title:](#project-title)
+  - [Short Description:](#short-description)
+  - [Main Features:](#main-features)
+  - [Technology used:](#technology-used)
+- [Instructions for use](#instructions-for-use)
+  - [Page Navigation:](#page-navigation)
+  - [Offline Mode](#offline-mode)
+- [Testing](#testing)
+  - [Integration Testing:](#integration-testing)
+  - [End to End Testing:](#end-to-end-testing)
+- [Project assistance](#project-assistance)
+- [Contributing](#contributing)
+- [Authors \& contributors](#authors--contributors)
+- [License](#license)
+
+</details>
+
+## Overview
 
 ### Project Title:
 
@@ -53,3 +74,29 @@ The application continues to function even if there is no internet connection, t
 - E2E testing focuses on testing the entire flow of the application, making sure it works as expected from the user's perspective.
 - Library used: Playwright
 - Test files are available in the `tests/e2e` directory.
+
+## Project assistance
+
+If you want to say **thank you** or/and support active development of Cooknify:
+
+Add a [GitHub Star](https://github.com/wahyukmr/CookNify__Catalog-Restaurant) to the project.
+
+Together, we can make PROJECT_NAME **better**!
+
+## Contributing
+
+First off, thanks for taking the time to contribute! Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make will benefit everybody else and are **greatly appreciated**.
+
+Please read [our contribution guidelines](CONTRIBUTING.md), and thank you for being involved!
+
+## Authors & contributors
+
+The original setup of this repository is by [Wahyukmr](https://github.com/wahyukmr).
+
+For a full list of all authors and contributors, see [the contributors page](https://github.com/wahyukmr/CookNify__Catalog-Restaurant/contributors).
+
+## License
+
+This project is licensed under the **MIT license**.
+
+See [LICENSE](LICENSE) for more information.

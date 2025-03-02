@@ -1,5 +1,6 @@
 import { test } from '../fixtures/restaurantFixture';
 import { expect } from '@playwright/test';
+import { toggleDetailFavoriteButton } from '../helpers';
 
 test.describe('Unfavorite Restaurant Flow', () => {
   test('Should display the favorite restaurant item in the favorite page', async ({
@@ -74,14 +75,7 @@ test.describe('Unfavorite Restaurant Flow', () => {
     });
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
-    const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
-    await listRestaurantItemDetail.waitFor();
-
-    const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-
-    await detailFavoriteButton.scrollIntoViewIfNeeded();
-
-    await detailFavoriteButton.click();
+    const detailFavoriteButton = await toggleDetailFavoriteButton(page);
 
     await expect(detailFavoriteButton).toBeDisabled();
 
@@ -118,14 +112,7 @@ test.describe('Unfavorite Restaurant Flow', () => {
     });
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
-    const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
-    await listRestaurantItemDetail.waitFor();
-
-    const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-
-    await detailFavoriteButton.scrollIntoViewIfNeeded();
-
-    await detailFavoriteButton.click();
+    await toggleDetailFavoriteButton(page);
 
     await page.waitForSelector('.notyf__message', { state: 'visible' });
     await page.waitForSelector('.notyf__message', { state: 'hidden' });

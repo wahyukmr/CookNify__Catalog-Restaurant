@@ -1,6 +1,6 @@
 export const toggleDetailFavoriteButton = async (page) => {
   const listRestaurantItemDetail = page.locator('list-restaurant-item-detail');
-  await listRestaurantItemDetail.waitFor({ state: 'visible', timeout: 60000 });
+  await listRestaurantItemDetail.waitFor();
 
   const detailFavoriteButton = page.locator('#detailFavoriteBtn');
 

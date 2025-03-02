@@ -1,0 +1,5 @@
+# Semua file teks menggunakan LF secara konsisten
+* text=auto eol=lf
+
+# File tertentu tetap menggunakan CRLF jika diperlukan (misalnya, script batch Windows)
+*.bat text eol=crlf

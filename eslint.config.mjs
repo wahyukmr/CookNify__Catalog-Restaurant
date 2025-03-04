@@ -1,8 +1,8 @@
 import pluginJs from '@eslint/js';
 import dicodingStyle from 'eslint-config-dicodingacademy';
-import prettierConfig from 'eslint-plugin-prettier/recommended'; // Memastikan bahwa Prettier dan ESLint bekerja sama dengan baik
-import globals from 'globals';
 import jestPlugin from 'eslint-plugin-jest';
+import prettierConfig from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [

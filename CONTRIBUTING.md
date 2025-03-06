@@ -67,22 +67,29 @@ We use a GitFlow-inspired branching strategy:
 
    > We follow [Conventional Commits](https://www.conventionalcommits.org/):
    >
-   > - `feat:` → A new feature
-   > - `fix:` → A bug fix
-   > - `docs:` → Documentation updates
-   > - `refactor:` → Code refactoring (no feature change)
-   > - `test:` → Adding or updating tests
+   > - `[feat] ➕` → A new feature
+   > - `[fix] 🪳` → A bug fix
+   > - `[docs] 📃` → Documentation updates
+   > - `[refactor] 🚀` → Code refactoring (no feature change)
+   > - `[test] 🧪` → Adding or updating tests
    >
    > Example:
    >
    > ```bash
-   > git commit -m "feat: add user authentication"
+   > git commit -m "[feat] ➕ add user authentication"
    > ```
 
 4. **Push to the remote repository**
+
    ```sh
    git push origin your-branch-name
    ```
+
+   > Example:
+   >
+   > ```bash
+   > git commit -m "feat/add-user-authentication"
+   > ```
 
 ## 🧪 Testing and Validation
 

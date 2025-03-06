@@ -123,11 +123,9 @@ export default class RestoBatchLoader {
       );
       this._renderBatch(nextBatch);
 
-      requestAnimationFrame(() => {
-        this._renderer.elements.listItemContainer.scrollTo({
-          left: this.scrollDistanceToLastItemInView,
-          behavior: 'smooth',
-        });
+      this._renderer.elements.listItemContainer.scrollTo({
+        left: this.scrollDistanceToLastItemInView,
+        behavior: 'instant',
       });
 
       if (
@@ -166,6 +164,9 @@ export default class RestoBatchLoader {
 
   _appendSentinel() {
     const sentinel = this._renderer.createSentinelElement();
-    this._observer.observe(sentinel);
+
+    requestAnimationFrame(() => {
+      this._observer.observe(sentinel);
+    });
   }
 }

@@ -58,6 +58,7 @@ export default class RestoBaseView {
       left: this.batchLoader.scrollDistanceToLastItemInView,
       behavior: 'smooth',
     });
+
     if (this.batchLoader.indexItemByClickingBtn >= this.batchLoader.restaurants.length) {
       this.batchLoader.scrollByButton = false;
     }

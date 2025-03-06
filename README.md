@@ -81,8 +81,6 @@ If you want to say **thank you** or/and support active development of Cooknify:
 
 Add a [GitHub Star](https://github.com/wahyukmr/CookNify__Catalog-Restaurant) to the project.
 
-Together, we can make PROJECT_NAME **better**!
-
 ## Contributing
 
 First off, thanks for taking the time to contribute! Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make will benefit everybody else and are **greatly appreciated**.

@@ -75,6 +75,7 @@ test.describe('Unfavorite Restaurant Flow', () => {
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
+    await detailFavoriteButton.waitFor({ visible: 'attached' });
 
     await detailFavoriteButton.scrollIntoViewIfNeeded();
 
@@ -116,6 +117,7 @@ test.describe('Unfavorite Restaurant Flow', () => {
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
+    await detailFavoriteButton.waitFor({ visible: 'attached' });
 
     await detailFavoriteButton.scrollIntoViewIfNeeded();
 

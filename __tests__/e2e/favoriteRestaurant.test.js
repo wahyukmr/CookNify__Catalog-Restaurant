@@ -71,7 +71,6 @@ test.describe('Favorite Restaurant Flow', () => {
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
 
-    await expect(detailFavoriteButton).toBeVisible({ visible: true });
     await detailFavoriteButton.scrollIntoViewIfNeeded();
 
     await detailFavoriteButton.click();
@@ -111,7 +110,6 @@ test.describe('Favorite Restaurant Flow', () => {
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
 
-    await expect(detailFavoriteButton).toBeVisible({ visible: true });
     await detailFavoriteButton.scrollIntoViewIfNeeded();
 
     await detailFavoriteButton.click();

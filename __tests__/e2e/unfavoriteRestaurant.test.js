@@ -75,11 +75,6 @@ test.describe('Unfavorite Restaurant Flow', () => {
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-    await detailFavoriteButton.waitFor({ visible: 'attached' });
-
-    await detailFavoriteButton.scrollIntoViewIfNeeded();
-
-    await detailFavoriteButton.click();
 
     await expect(detailFavoriteButton).toBeDisabled();
 
@@ -117,10 +112,6 @@ test.describe('Unfavorite Restaurant Flow', () => {
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-    await detailFavoriteButton.waitFor({ visible: 'attached' });
-
-    await detailFavoriteButton.scrollIntoViewIfNeeded();
-
     await detailFavoriteButton.click();
 
     await page.waitForSelector('.notyf__message', { state: 'visible' });

@@ -69,9 +69,11 @@ test.describe('Favorite Restaurant Flow', () => {
     });
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
-    const detailFavoriteButton = page.locator('list-restaurant-item-detail #detailFavoriteBtn');
+    const detailFavoriteButton = page.locator(
+      'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
+    );
 
-    await expect(detailFavoriteButton).toBeVisible({ timeout: 10000 });
+    await expect(detailFavoriteButton).toBeVisible();
     await detailFavoriteButton.scrollIntoViewIfNeeded();
 
     await detailFavoriteButton.click();
@@ -109,7 +111,9 @@ test.describe('Favorite Restaurant Flow', () => {
     });
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
-    const detailFavoriteButton = page.locator('list-restaurant-item-detail #detailFavoriteBtn');
+    const detailFavoriteButton = page.locator(
+      'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
+    );
 
     await expect(detailFavoriteButton).toBeVisible();
     await detailFavoriteButton.scrollIntoViewIfNeeded();

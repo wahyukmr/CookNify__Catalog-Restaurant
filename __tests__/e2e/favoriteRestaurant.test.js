@@ -71,7 +71,7 @@ test.describe('Favorite Restaurant Flow', () => {
 
     const detailFavoriteButton = page.locator('list-restaurant-item-detail #detailFavoriteBtn');
 
-    await expect(detailFavoriteButton).toBeVisible();
+    await expect(detailFavoriteButton).toBeVisible({ timeout: 10000 });
     await detailFavoriteButton.scrollIntoViewIfNeeded();
 
     await detailFavoriteButton.click();

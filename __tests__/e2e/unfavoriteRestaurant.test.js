@@ -75,6 +75,7 @@ test.describe('Unfavorite Restaurant Flow', () => {
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
+    await detailFavoriteButton.click();
 
     await expect(detailFavoriteButton).toBeDisabled();
 

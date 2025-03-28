@@ -64,13 +64,10 @@ test.describe('Favorite Restaurant Flow', () => {
     await expect(firstCardDetailsButton).toBeVisible();
     await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
-      waitUntil: 'domcontentloaded',
-    });
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-
     await detailFavoriteButton.click();
 
     await expect(detailFavoriteButton).toBeDisabled();
@@ -107,7 +104,6 @@ test.describe('Favorite Restaurant Flow', () => {
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator('#detailFavoriteBtn');
-
     await detailFavoriteButton.click();
 
     await page.waitForSelector('.notyf__message', { state: 'visible' });

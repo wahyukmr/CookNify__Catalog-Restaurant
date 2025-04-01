@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import { API_ENPOINTS } from '../../src/config/constants';
 import { test } from '../fixtures/restaurantFixture';
 
 test.describe('Favorite Restaurant Flow', () => {
@@ -61,11 +62,12 @@ test.describe('Favorite Restaurant Flow', () => {
       `list-restaurant-items[data-id="${firstRestaurant.id}"] .restaurant-item__actions .anchor`,
     );
     await expect(firstCardDetailsButton).toBeVisible();
-    await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
-      waitUntil: 'networkidle',
-    });
+    const responsePromise = page.waitForResponse(API_ENPOINTS.RESTO_DETAIL(firstRestaurant.id));
+    await firstCardDetailsButton.click();
+    await responsePromise;
+
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator(
@@ -99,11 +101,12 @@ test.describe('Favorite Restaurant Flow', () => {
       `list-restaurant-items[data-id="${firstRestaurant.id}"] .restaurant-item__actions .anchor`,
     );
     await expect(firstCardDetailsButton).toBeVisible();
-    await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
-      waitUntil: 'networkidle',
-    });
+    const responsePromise = page.waitForResponse(API_ENPOINTS.RESTO_DETAIL(firstRestaurant.id));
+    await firstCardDetailsButton.click();
+    await responsePromise;
+
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator(

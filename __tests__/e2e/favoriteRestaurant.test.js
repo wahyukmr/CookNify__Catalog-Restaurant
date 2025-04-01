@@ -60,11 +60,12 @@ test.describe('Favorite Restaurant Flow', () => {
     const firstCardDetailsButton = page.locator(
       `list-restaurant-items[data-id="${firstRestaurant.id}"] .restaurant-item__actions .anchor`,
     );
-
     await expect(firstCardDetailsButton).toBeVisible();
     await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
+      waitUntil: 'networkidle',
+    });
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator(
@@ -100,7 +101,9 @@ test.describe('Favorite Restaurant Flow', () => {
     await expect(firstCardDetailsButton).toBeVisible();
     await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
+      waitUntil: 'networkidle',
+    });
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator(

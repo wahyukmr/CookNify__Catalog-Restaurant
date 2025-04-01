@@ -1,6 +1,6 @@
 import styles from '../assets/styles/components/list-restaurant-items.styles.scss';
 import { RESTO_IMG_LARGE, RESTO_IMG_MEDIUM, RESTO_IMG_SMALL } from '../config/constants';
-import { clearContent, lazysizesForShadowDom } from '../utils';
+import { lazysizesForShadowDom } from '../utils';
 
 class ListRestaurantItems extends HTMLElement {
   _dataRestaurant = {};
@@ -8,68 +8,37 @@ class ListRestaurantItems extends HTMLElement {
   constructor() {
     super();
     this._shadowRoot = this.attachShadow({ mode: 'open' });
-    this._style = document.createElement('style');
-    this.render();
-  }
+    const styleEl = document.createElement('style');
 
-  set dataRestaurant(data) {
-    this._dataRestaurant = data;
-    this.render();
-  }
-
-  get dataRestaurant() {
-    return this._dataRestaurant;
-  }
-
-  connectedCallback() {
-    lazysizesForShadowDom(this._shadowRoot, '.restaurant-item__picture');
-  }
-
-  render() {
-    clearContent(this);
-
-    const { id, name, description, pictureId, city, rating, favorited } = this.dataRestaurant;
-
-    this._style.textContent = styles;
-    this._shadowRoot.appendChild(this._style);
-
+    styleEl.textContent = styles;
+    this._shadowRoot.appendChild(styleEl);
     this._shadowRoot.innerHTML += `
       <div class="restaurant-item">
         <picture class="restaurant-item__picture">
           <div class="skeleton"></div>
-          <source
-            type="image/jpeg"
-            data-srcset="${RESTO_IMG_SMALL}/${pictureId} 405w, 
-                 ${RESTO_IMG_MEDIUM}/${pictureId} 810w, 
-                 ${RESTO_IMG_LARGE}/${pictureId} 1215w"
-            data-sizes="auto">
-          <img
-            data-src="${RESTO_IMG_MEDIUM}/${pictureId}" alt="${name} restaurant"
-            loading="lazy"
-            width="auto"
-            height="auto"
-            class="restaurant-item__image lazyload">
+          <source type="image/jpeg" data-srcset="" data-sizes="auto">
+          <img data-src="" alt="Restaurant image" loading="lazy" width="auto" height="auto" class="restaurant-item__image lazyload">
         </picture>
-        
-        <div id="restoStatusIcon" class="restaurant-item__favorite">
-          ${this._renderFavoriteIcon(favorited)}
-        </div>
-                
+        <div id="restoStatusIcon" class="restaurant-item__favorite"></div>
         <div class="restaurant-item__content">
-          <span class="restaurant-item__header">${name || 'Unknown'}</span>
-          <p class="restaurant-item__description">${description || 'No description available for this restaurant.'}</p>
+          <span class="restaurant-item__header"></span>
+          <p class="restaurant-item__description"></p>
           <div class="restaurant-item__info">
             <div class="restaurant-item__info-rating">
-              <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="m305-704 112-145q12-16 28.5-23.5T480-880q18 0 34.5 7.5T543-849l112 145 170 57q26 8 41 29.5t15 47.5q0 12-3.5 24T866-523L756-367l4 164q1 35-23 59t-56 24q-2 0-22-3l-179-50-179 50q-5 2-11 2.5t-11 .5q-32 0-56-24t-23-59l4-165L95-523q-8-11-11.5-23T80-570q0-25 14.5-46.5T135-647l170-57Zm49 69-194 64 124 179-4 191 200-55 200 56-4-192 124-177-194-66-126-165-126 165Zm126 135Z"/></svg>
-              <span class="text">${rating || '0'} Rating</span>
+              <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+                <path d="m305-704 112-145q12-16 28.5-23.5T480-880q18 0 34.5 7.5T543-849l112 145 170 57q26 8 41 29.5t15 47.5q0 12-3.5 24T866-523L756-367l4 164q1 35-23 59t-56 24q-2 0-22-3l-179-50-179 50q-5 2-11 2.5t-11 .5q-32 0-56-24t-23-59l4-165L95-523q-8-11-11.5-23T80-570q0-25 14.5-46.5T135-647l170-57Z"/>
+              </svg>
+              <span class="text rating-text"></span>
             </div>
             <div class="restaurant-item__info-location">
-              <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff"><path d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 294q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm0 106Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Zm0-480Z"/></svg>
-              <span class="text">${city || 'N/A'}</span>
+              <svg class="icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffffff">
+                <path d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 294q122-112 181-203.5T720-552q0-109-69.5-178.5T480-800q-101 0-170.5 69.5T240-552q0 71 59 162.5T480-186Zm0 106Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Zm0-480Z"/>
+              </svg>
+              <span class="text location-text"></span>
             </div>
           </div>
           <div class="restaurant-item__actions">
-            <a href="#/resto-list/detail/${id}" class="anchor">
+            <a href="" class="anchor detail-link">
               <span class="text">View Details</span>
               <svg aria-hidden="true" focusable="false" class="icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -79,6 +48,54 @@ class ListRestaurantItems extends HTMLElement {
         </div>
       </div>
     `;
+  }
+
+  set dataRestaurant(data) {
+    this._dataRestaurant = data;
+    this._updateContent();
+  }
+
+  get dataRestaurant() {
+    return this._dataRestaurant;
+  }
+
+  connectedCallback() {
+    // Inisialisasi lazysizes untuk gambar dalam Shadow DOM
+    lazysizesForShadowDom(this._shadowRoot, '.restaurant-item__picture');
+    // Lakukan update pertama jika data sudah tersedia
+    this._updateContent();
+  }
+
+  _updateContent() {
+    const { id, name, description, pictureId, city, rating, favorited } = this.dataRestaurant;
+    if (!id) return; // Pastikan data telah terisi sebelum update
+
+    // Update gambar
+    const pictureEl = this._shadowRoot.querySelector('.restaurant-item__picture');
+    const sourceEl = pictureEl.querySelector('source');
+    const imgEl = pictureEl.querySelector('img');
+    sourceEl.dataset.srcset = `
+      ${RESTO_IMG_SMALL}/${pictureId} 405w,
+      ${RESTO_IMG_MEDIUM}/${pictureId} 810w,
+      ${RESTO_IMG_LARGE}/${pictureId} 1215w
+    `;
+    imgEl.dataset.src = `${RESTO_IMG_MEDIUM}/${pictureId}`;
+    imgEl.alt = `${name} restaurant`;
+
+    // Update ikon favorit
+    const favoriteEl = this._shadowRoot.getElementById('restoStatusIcon');
+    favoriteEl.innerHTML = this._renderFavoriteIcon(favorited);
+
+    // Update konten teks
+    this._shadowRoot.querySelector('.restaurant-item__header').textContent = name || 'Unknown';
+    this._shadowRoot.querySelector('.restaurant-item__description').textContent =
+      description || 'No description available for this restaurant.';
+    this._shadowRoot.querySelector('.rating-text').textContent = `${rating || '0'} Rating`;
+    this._shadowRoot.querySelector('.location-text').textContent = city || 'N/A';
+
+    // Update link detail
+    const detailLink = this._shadowRoot.querySelector('.detail-link');
+    detailLink.href = `#/resto-list/detail/${id}`;
   }
 
   _renderFavoriteIcon(favorited) {

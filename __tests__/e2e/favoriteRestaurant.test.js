@@ -64,16 +64,12 @@ test.describe('Favorite Restaurant Flow', () => {
     await expect(firstCardDetailsButton).toBeVisible();
     await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
-      waitUntil: 'domcontentloaded',
-    });
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
-    const detailFavoriteButton = page.locator('list-restaurant-item-detail #detailFavoriteBtn');
-
-    await expect(detailFavoriteButton).toBeVisible();
-    await detailFavoriteButton.scrollIntoViewIfNeeded();
-
+    const detailFavoriteButton = page.locator(
+      'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
+    );
     await detailFavoriteButton.click();
 
     await expect(detailFavoriteButton).toBeDisabled();
@@ -104,16 +100,12 @@ test.describe('Favorite Restaurant Flow', () => {
     await expect(firstCardDetailsButton).toBeVisible();
     await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`, {
-      waitUntil: 'domcontentloaded',
-    });
+    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
-    const detailFavoriteButton = page.locator('list-restaurant-item-detail #detailFavoriteBtn');
-
-    await expect(detailFavoriteButton).toBeVisible();
-    await detailFavoriteButton.scrollIntoViewIfNeeded();
-
+    const detailFavoriteButton = page.locator(
+      'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
+    );
     await detailFavoriteButton.click();
 
     await page.waitForSelector('.notyf__message', { state: 'visible' });

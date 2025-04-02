@@ -45,6 +45,7 @@ jobs:
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './dist'
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           deploy-message: 'Deploy Preview for PR #${{ github.event.pull_request.number }}'
           github-deployment-environment: preview
         env:

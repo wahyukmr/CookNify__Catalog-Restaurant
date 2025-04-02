@@ -73,6 +73,9 @@ test.describe('Favorite Restaurant Flow', () => {
       'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
       { state: 'visible', timeout: 60000 },
     ); // Increased timeout
+
+    await expect(detailFavoriteButton).toBeVisible();
+
     await detailFavoriteButton.click();
 
     await expect(detailFavoriteButton).toBeDisabled();

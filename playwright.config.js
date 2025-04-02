@@ -44,7 +44,18 @@ const config = defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'], ignoreHTTPSErrors: true, bypassCSP: true },
+      use: {
+        ...devices['Desktop Firefox'],
+        serviceWorkers: 'block',
+        ignoreHTTPSErrors: true,
+        bypassCSP: true,
+        launchOptions: {
+          firefoxUserPrefs: {
+            'network.http.redirection-limit': 20, // Handle redirect
+            'security.insecure_field_warning.contextual.enabled': false,
+          },
+        },
+      },
     },
 
     {

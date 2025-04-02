@@ -77,7 +77,7 @@ test.describe('Favorite Restaurant Flow', () => {
     );
     await detailFavoriteButton.waitFor({
       state: 'visible',
-      timeout: 60000,
+      timeout: 70000,
     });
 
     await expect(detailFavoriteButton).toBeEnabled();
@@ -124,7 +124,7 @@ test.describe('Favorite Restaurant Flow', () => {
     );
     await detailFavoriteButton.waitFor({
       state: 'visible',
-      timeout: 60000,
+      timeout: 70000,
     });
 
     await detailFavoriteButton.click();

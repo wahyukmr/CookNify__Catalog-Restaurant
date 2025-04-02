@@ -165,6 +165,7 @@ jobs:
         with:
           publish-dir: './dist'
           production-branch: main
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           production-deploy: true
           deploy-message: '🚀 Auto Deployment for Production - ${{ github.sha }}'
           github-deployment-environment: production

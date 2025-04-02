@@ -60,21 +60,27 @@ test.describe('Favorite Restaurant Flow', () => {
     const firstCardDetailsButton = page.locator(
       `list-restaurant-items[data-id="${firstRestaurant.id}"] .restaurant-item__actions .anchor`,
     );
-    await expect(firstCardDetailsButton).toBeVisible();
-    await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
+    await firstCardDetailsButton.scrollIntoViewIfNeeded();
+
+    await expect(firstCardDetailsButton).toBeVisible();
+    await Promise.all([
+      page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`),
+      firstCardDetailsButton.click(),
+    ]);
+
+    await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator(
       'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
     );
-    await page.waitForSelector(
-      'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
-      { state: 'visible', timeout: 60000 },
-    ); // Increased timeout
+    await detailFavoriteButton.waitFor({
+      state: 'visible',
+      timeout: 60000,
+    });
 
-    await expect(detailFavoriteButton).toBeVisible();
+    await expect(detailFavoriteButton).toBeEnabled();
 
     await detailFavoriteButton.click();
 
@@ -101,15 +107,26 @@ test.describe('Favorite Restaurant Flow', () => {
     const firstCardDetailsButton = page.locator(
       `list-restaurant-items[data-id="${firstRestaurant.id}"] .restaurant-item__actions .anchor`,
     );
-    await expect(firstCardDetailsButton).toBeVisible();
-    await firstCardDetailsButton.click();
 
-    await page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`);
+    await firstCardDetailsButton.scrollIntoViewIfNeeded();
+
+    await expect(firstCardDetailsButton).toBeVisible();
+    await Promise.all([
+      page.waitForURL(`#/resto-list/detail/${firstRestaurant.id}`),
+      firstCardDetailsButton.click(),
+    ]);
+
+    await page.waitForLoadState('networkidle');
     await expect(page).toHaveURL(`#/resto-list/detail/${firstRestaurant.id}`);
 
     const detailFavoriteButton = page.locator(
       'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
     );
+    await detailFavoriteButton.waitFor({
+      state: 'visible',
+      timeout: 60000,
+    });
+
     await detailFavoriteButton.click();
 
     await page.waitForSelector('.notyf__message', { state: 'visible' });

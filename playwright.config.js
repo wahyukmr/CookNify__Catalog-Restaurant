@@ -44,7 +44,7 @@ const config = defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'], ignoreHTTPSErrors: true, bypassCSP: true },
     },
 
     {

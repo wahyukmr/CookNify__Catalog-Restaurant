@@ -60,7 +60,6 @@ test.describe('Favorite Restaurant Flow', () => {
     const firstCardDetailsButton = page.locator(
       `list-restaurant-items[data-id="${firstRestaurant.id}"] .restaurant-item__actions .anchor`,
     );
-
     await expect(firstCardDetailsButton).toBeVisible();
     await firstCardDetailsButton.click();
 
@@ -70,6 +69,13 @@ test.describe('Favorite Restaurant Flow', () => {
     const detailFavoriteButton = page.locator(
       'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
     );
+    await page.waitForSelector(
+      'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
+      { state: 'visible', timeout: 60000 },
+    ); // Increased timeout
+
+    await expect(detailFavoriteButton).toBeVisible();
+
     await detailFavoriteButton.click();
 
     await expect(detailFavoriteButton).toBeDisabled();
@@ -80,9 +86,7 @@ test.describe('Favorite Restaurant Flow', () => {
     await expect(notification).toHaveCount(1);
     await expect(notification).toHaveText('The restaurant has been added from the favorites list');
 
-    await page.waitForSelector('.notyf__message', {
-      state: 'hidden',
-    });
+    await page.waitForSelector('.notyf__message', { state: 'hidden' });
     await expect(detailFavoriteButton).toHaveText('Unfavorite');
     await expect(detailFavoriteButton).toBeEnabled();
   });

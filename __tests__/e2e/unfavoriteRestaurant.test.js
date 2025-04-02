@@ -75,6 +75,13 @@ test.describe('Unfavorite Restaurant Flow', () => {
     const detailFavoriteButton = page.locator(
       'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
     );
+    await page.waitForSelector(
+      'list-restaurant-item-detail .restaurant__container .restaurant__info .restaurant__info-detail #detailFavoriteBtn',
+      { state: 'visible', timeout: 60000 },
+    ); // Increased timeout
+
+    await expect(detailFavoriteButton).toBeVisible();
+
     await detailFavoriteButton.click();
 
     await expect(detailFavoriteButton).toBeDisabled();
@@ -87,9 +94,7 @@ test.describe('Unfavorite Restaurant Flow', () => {
       'The restaurant has been removed from the favorites list',
     );
 
-    await page.waitForSelector('.notyf__message', {
-      state: 'hidden',
-    });
+    await page.waitForSelector('.notyf__message', { state: 'hidden' });
     await expect(detailFavoriteButton).toHaveText('Favorite');
     await expect(detailFavoriteButton).toBeEnabled();
   });

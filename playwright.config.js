@@ -83,7 +83,7 @@ const config = defineConfig({
 if (!process.env.BASE_URL) {
   config.webServer = {
     command: 'npm run serve',
-    url: 'http://localhost:3000/',
+    url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   };
 }

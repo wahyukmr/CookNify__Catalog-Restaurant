@@ -1,8 +1,15 @@
+<h1 align= "center">CookNify (Restaurant Catalog)</h1>
+
+<div align= "center">
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c8ee2906-cd6d-4941-8de8-6adc9f7d05ab/deploy-status?branch=main)](https://app.netlify.com/sites/cooknify/deploys)
+
+</div>
+
 <details open="open">
 <summary>Table of Contents</summary>
 
 - [Overview](#overview)
-  - [Project Title:](#project-title)
   - [Short Description:](#short-description)
   - [Main Features:](#main-features)
   - [Technology used:](#technology-used)
@@ -20,10 +27,6 @@
 </details>
 
 ## Overview
-
-### Project Title:
-
-CookNify (Restaurant Catalog)
 
 ### Short Description:
 

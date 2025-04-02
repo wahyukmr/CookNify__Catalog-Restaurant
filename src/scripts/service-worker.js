@@ -1,13 +1,11 @@
-/* global clients */
-
+import { BackgroundSyncPlugin } from 'workbox-background-sync';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
-import { NetworkOnly, StaleWhileRevalidate } from 'workbox-strategies';
-import { BackgroundSyncPlugin } from 'workbox-background-sync';
-import { ExpirationPlugin } from 'workbox-expiration';
-import { CacheableResponsePlugin } from 'workbox-cacheable-response';
+import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
 
-// Menggunakan daftar file hasil build yang dipre-cache
+// Menggunakan daftar file hasil build yang dipre-cache (Pre-cache assets statis)
 precacheAndRoute(self.__WB_MANIFEST);
 
 // Caching untuk aset statis (HTML, CSS, JS, gambar)
@@ -25,7 +23,7 @@ registerRoute(
 
 registerRoute(
   ({ url }) => url.href.startsWith('https://restaurant-api.dicoding.dev/list'),
-  new StaleWhileRevalidate({
+  new NetworkFirst({
     cacheName: 'restaurant-list-api',
     plugins: [
       new ExpirationPlugin({
@@ -83,7 +81,7 @@ registerRoute(
 
 registerRoute(
   ({ url }) => url.href.startsWith('https://restaurant-api.dicoding.dev/detail/'),
-  new StaleWhileRevalidate({
+  new NetworkFirst({
     cacheName: 'restaurant-detail-api',
     plugins: [
       new ExpirationPlugin({
@@ -99,7 +97,8 @@ registerRoute(
 
 registerRoute(
   ({ url }) => url.href.startsWith('https://restaurant-api.dicoding.dev/review'),
-  new NetworkOnly({
+  new NetworkFirst({
+    cacheName: 'restaurant-review-api',
     plugins: [
       new BackgroundSyncPlugin('review-sync', {
         maxRetentionTime: 24 * 60, // Tahan hingga 24 jam
@@ -109,11 +108,36 @@ registerRoute(
   'POST',
 );
 
+// Tambahkan Event Fetch untuk Log Debugging
+self.addEventListener('fetch', (event) => {
+  console.log(`[Service Worker] Fetching: ${event.request.url}`);
+});
+
 // Menangani event install dan activate
 self.addEventListener('install', () => {
   self.skipWaiting();
 });
 
+// Event listener yang berjalan sekali saja ketika service worker diaktifkan setelah diinstal
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (
+            ![
+              'restaurant-list-api',
+              'restaurant-detail-api',
+              'restaurant-review-api',
+              'static-assets',
+            ].includes(cacheName)
+          ) {
+            console.log(`[Service Worker] Deleting old cache: ${cacheName}`);
+            return caches.delete(cacheName);
+          }
+        }),
+      );
+    }),
+  );
+  self.clients.claim();
 });

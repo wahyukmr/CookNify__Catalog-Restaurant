@@ -10,7 +10,6 @@ Thank you for your interest in contributing to this project! This guide outlines
   - [🔧 Setting Up the Development Environment](#-setting-up-the-development-environment)
   - [🌿 Branching Strategy](#-branching-strategy)
   - [🚀 Developing and Making Changes](#-developing-and-making-changes)
-  - [🧪 Testing and Validation](#-testing-and-validation)
   - [🔀 Submitting a Pull Request](#-submitting-a-pull-request)
   - [🎯 Conclusion](#-conclusion)
 
@@ -58,7 +57,16 @@ We use a GitFlow-inspired branching strategy:
    ```sh
    npm run lint
    ```
-3. **Commit changes with clear messages**
+3. **Run unit tests**
+   ```sh
+   npm run test
+   ```
+4. **Run Playwright for E2E testing**
+   ```sh
+   npm run e2e
+   ```
+5. **Ensure all tests pass**
+6. **Commit changes with clear messages**
 
    ```sh
    git add .
@@ -79,29 +87,11 @@ We use a GitFlow-inspired branching strategy:
    > git commit -m "[feat] ➕ add user authentication"
    > ```
 
-4. **Push to the remote repository**
+7. **Push to the remote repository**
 
    ```sh
    git push origin your-branch-name
    ```
-
-   > Example:
-   >
-   > ```bash
-   > git commit -m "feat/add-user-authentication"
-   > ```
-
-## 🧪 Testing and Validation
-
-1. **Run unit tests (if applicable)**
-   ```sh
-   npm run test
-   ```
-2. **Run Playwright for E2E testing (if applicable)**
-   ```sh
-   npm run e2e
-   ```
-3. **Ensure all tests pass before submitting a PR**
 
 ## 🔀 Submitting a Pull Request
 

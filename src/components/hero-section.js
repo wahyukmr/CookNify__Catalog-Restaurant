@@ -74,7 +74,7 @@ class HeroSection extends HTMLElement {
             Discover <span class="hero__heading--highlight">Exceptional Culinary Experiences</span> Curated Just for You
           </h1>
           <p class="hero__description">Discover unique flavors and exclusive dining spots curated just for you, all at your fingertips. Find the perfect restaurant for every occasion.</p>
-          <a href="#/resto-list" role="button" id="heroCtaBtn" class="hero__cta-button" aria-label="Explore restaurants now">
+          <a href="#/resto-list" role="button" id="heroCtaBtn" class="hero__cta-button" aria-label="Explore the restaurant catalog now">
             <span class="hero__cta-text">Explore Now</span>
             <svg class="hero__cta-svg" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="none">
               <path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/>

@@ -7,15 +7,17 @@ import {
   showSuccessNotification,
   showWarningNotification,
 } from './notifications';
-import serviceWorkerRegister from './service-worker-register';
+import { serviceWorkerRegister } from './service-worker-register';
+import { updateHeadMeta } from './updateHeadMeta';
 
 export {
-  debounce,
-  serviceWorkerRegister,
   clearContent,
-  showWarningNotification,
+  debounce,
+  delay,
+  lazysizesForShadowDom,
+  serviceWorkerRegister,
   showErrorNotification,
   showSuccessNotification,
-  lazysizesForShadowDom,
-  delay,
+  showWarningNotification,
+  updateHeadMeta,
 };

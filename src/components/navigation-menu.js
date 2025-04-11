@@ -60,13 +60,13 @@ class NavigationMenu extends HTMLElement {
           </button>
           <ul aria-label="Main navigation" class="topnav__links">
             <li class="topnav__item">
-              <a href="#/" class="topnav__link" aria-label="Home">Home</a>
+              <a href="#/" class="topnav__link" aria-label="Home page">Home</a>
             </li>
             <li class="topnav__item">
-              <a href="#/favorite" class="topnav__link" aria-label="Favorite">Favorite</a>
+              <a href="#/favorite" class="topnav__link" aria-label="Favorite page">Favorite</a>
             </li>
             <li class="topnav__item">
-              <a href="#/about" class="topnav__link" aria-label="About Us">About Us</a>
+              <a href="#/about" class="topnav__link" aria-label="About us page">About Us</a>
             </li>
           </ul>
         </div>

@@ -1,7 +1,7 @@
 import { Workbox } from 'workbox-window';
 import { showErrorNotification, showWarningNotification } from './notifications';
 
-const serviceWorkerRegister = async () => {
+export const serviceWorkerRegister = async () => {
   if (!('serviceWorker' in navigator)) {
     showWarningNotification('Service Worker not supported in the browser');
     return;
@@ -15,5 +15,3 @@ const serviceWorkerRegister = async () => {
     showErrorNotification(`Failed to register service worker: ${error.message}`);
   }
 };
-
-export default serviceWorkerRegister;

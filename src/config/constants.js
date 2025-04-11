@@ -4,6 +4,8 @@ const RESTO_IMG_SMALL = `${BASE_API_URL}/images/small`;
 const RESTO_IMG_MEDIUM = `${BASE_API_URL}/images/medium`;
 const RESTO_IMG_LARGE = `${BASE_API_URL}/images/large`;
 
+const DEFAULT_PREVIEW_IMG = 'https://cooknify.netlify.app/restaurant-catalog-preview.jpg';
+
 const API_ENPOINTS = {
   RESTO_LIST: `${BASE_API_URL}/list`,
   RESTO_DETAIL: (id) => `${BASE_API_URL}/detail/${id}`,
@@ -38,13 +40,14 @@ const SHORT_LABELS = {
 };
 
 export {
-  BASE_API_URL,
   API_ENPOINTS,
-  TIMEOUT,
-  ROUTE,
-  RESTO_IMG_MEDIUM,
-  RESTO_IMG_LARGE,
-  RESTO_IMG_SMALL,
+  BASE_API_URL,
   DATABASE,
+  DEFAULT_PREVIEW_IMG,
+  RESTO_IMG_LARGE,
+  RESTO_IMG_MEDIUM,
+  RESTO_IMG_SMALL,
+  ROUTE,
   SHORT_LABELS,
+  TIMEOUT,
 };

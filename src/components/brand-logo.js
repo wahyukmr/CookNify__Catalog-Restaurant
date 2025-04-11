@@ -16,7 +16,7 @@ class BrandLogo extends HTMLElement {
     this._shadowRoot.appendChild(this._style);
 
     this._shadowRoot.innerHTML += `
-      <a href="#/" class="brand-logo" aria-label="Home">
+      <a href="#/" class="brand-logo" aria-label="Go to home page via clicking the brand logo">
         <img src=${brandLogo} class="brand-logo__img" alt="brand logo on screen"/>
       </a>
     `;

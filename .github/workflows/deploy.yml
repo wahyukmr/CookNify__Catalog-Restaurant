@@ -44,7 +44,7 @@ jobs:
         uses: nwtgck/actions-netlify@v3.0
         with:
           publish-dir: './dist'
-          production-deploy: false
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           deploy-message: '🚀 Auto Deployment for Staging - ${{ github.sha }}'
           github-deployment-environment: staging
         env:

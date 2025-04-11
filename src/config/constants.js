@@ -4,7 +4,7 @@ const RESTO_IMG_SMALL = `${BASE_API_URL}/images/small`;
 const RESTO_IMG_MEDIUM = `${BASE_API_URL}/images/medium`;
 const RESTO_IMG_LARGE = `${BASE_API_URL}/images/large`;
 
-const DEFAULT_PREVIEW_IMG = 'https://cooknify.netlify.app/restaurant-catalog-preview.jpg';
+const DEFAULT_PREVIEW_IMG = 'https://cooknify.netlify.app/public/restaurant-catalog-preview.jpg';
 
 const API_ENPOINTS = {
   RESTO_LIST: `${BASE_API_URL}/list`,

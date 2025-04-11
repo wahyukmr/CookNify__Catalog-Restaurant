@@ -4,6 +4,7 @@ import { ExpirationPlugin } from 'workbox-expiration';
 import { precacheAndRoute } from 'workbox-precaching';
 import { registerRoute } from 'workbox-routing';
 import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { API_ENPOINTS, BASE_API_URL } from '../config/constants';
 
 // Menggunakan daftar file hasil build yang dipre-cache (Pre-cache assets statis)
 precacheAndRoute(self.__WB_MANIFEST);
@@ -22,7 +23,7 @@ registerRoute(
 );
 
 registerRoute(
-  ({ url }) => url.href.startsWith('https://restaurant-api.dicoding.dev/list'),
+  ({ url }) => url.href.startsWith(`${API_ENPOINTS.RESTO_LIST}`),
   new NetworkFirst({
     cacheName: 'restaurant-list-api',
     plugins: [
@@ -80,7 +81,7 @@ registerRoute(
 );
 
 registerRoute(
-  ({ url }) => url.href.startsWith('https://restaurant-api.dicoding.dev/detail/'),
+  ({ url }) => url.href.startsWith(`${BASE_API_URL}/detail/`),
   new NetworkFirst({
     cacheName: 'restaurant-detail-api',
     plugins: [
@@ -96,7 +97,7 @@ registerRoute(
 );
 
 registerRoute(
-  ({ url }) => url.href.startsWith('https://restaurant-api.dicoding.dev/review'),
+  ({ url }) => url.href.startsWith(`${API_ENPOINTS.REVIEW}`),
   new NetworkFirst({
     cacheName: 'restaurant-review-api',
     plugins: [

@@ -1,6 +1,6 @@
-import { ROUTE } from '../config/constants.js';
+import { API_ENPOINTS, DEFAULT_PREVIEW_IMG, RESTO_IMG_MEDIUM, ROUTE } from '../config/constants.js';
 import domService from '../services/domService.js';
-import { serviceWorkerRegister, showErrorNotification } from '../utils';
+import { serviceWorkerRegister, showErrorNotification, updateHeadMeta } from '../utils';
 
 export default class Router {
   constructor(routeHandlers, mainElement) {
@@ -52,6 +52,8 @@ export default class Router {
         }
 
         this._mainElement.appendChild(pageElement);
+
+        this._handleUpdateHeadmeta(path, paramId);
       } catch (error) {
         showErrorNotification(error.message);
       }
@@ -95,6 +97,65 @@ export default class Router {
         return 'about-page';
       default:
         return 'not-found-route-page';
+    }
+  }
+
+  async _handleUpdateHeadmeta(path, paramId) {
+    const baseUrl = 'https://cooknify.netlify.app/';
+
+    switch (path) {
+      case ROUTE.HOME:
+        updateHeadMeta({
+          title: 'CookNify | Discover Restaurants with Ease',
+          description:
+            'CookNify helps you find and explore restaurants with powerful features and user ratings.',
+          url: `${baseUrl}#/`,
+        });
+        break;
+
+      case ROUTE.RESTO_LIST:
+        updateHeadMeta({
+          title: 'CookNify | Restaurant Catalog',
+          description:
+            'Browse and filter restaurants based on rating and search keywords on CookNify.',
+          url: `${baseUrl}#/resto-list`,
+        });
+        break;
+
+      case ROUTE.RESTO_DETAIL:
+        if (paramId) {
+          try {
+            const res = await fetch(`${API_ENPOINTS.RESTO_DETAIL(paramId)}`);
+            const { restaurant } = await res.json();
+            updateHeadMeta({
+              title: `${restaurant.name} | CookNify`,
+              description: `Explore ${restaurant.name}, view its menu and user reviews on CookNify.`,
+              image: restaurant.pictureId
+                ? `${RESTO_IMG_MEDIUM}/${restaurant.pictureId}`
+                : `${DEFAULT_PREVIEW_IMG}`,
+              url: `${baseUrl}#/resto-list/detail/${paramId}`,
+            });
+          } catch (e) {
+            showErrorNotification('Failed to fetch restaurant details for meta:', e);
+          }
+        }
+        break;
+
+      case ROUTE.ABOUT:
+        updateHeadMeta({
+          title: 'About CookNify',
+          description: 'Learn about CookNify, our mission and the team behind the platform.',
+          url: `${baseUrl}#/about`,
+        });
+        break;
+
+      default:
+        updateHeadMeta({
+          title: 'Page Not Found | CookNify',
+          description: 'Oops! The page you’re looking for doesn’t exist.',
+          url: `${baseUrl}${location.hash}`,
+        });
+        break;
     }
   }
 }
